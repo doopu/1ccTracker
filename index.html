@@ -18,6 +18,9 @@
 	  height: 640px;
 	  align-content: center;
       }
+      #container2 {
+	  width: 800px;
+      }
       .flex {
 	  display: flex;
 	  flex-wrap: wrap;
@@ -29,10 +32,29 @@
       div {
 	  color: #183a1d;
       }
+
+* {
+  box-sizing: border-box;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-kerning: auto;
+}
+
+html {
+  font-family: sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
   </style>
 </head>
   <body>
-    <div style="font-family: 'touhouFont'; font-size: 40px">TOUHOU 1CC GENERATOR</div><br/>
+    <div style="font-family: 'touhouFont'; font-size: 40px">TOUHOU 1CC TRACKER</div><br/>
+    <div id="container2" class="flex">
+    <div>Want to track your Touhou progress and share it with your friends? Look no further than the Touhou 1CC Tracker! This page saves your progress in your computer's local storage, and you can even save the image below and store it for safe-keeping or sharing.</div>
+    <div>It is based off a template I found floating around the web, but whose source I can't track down. If you know who made the original template, please let me know! And if you have any other comments or feedback, you can contact me via email at doopu@theghostmanenclave.com.</div>
+    </div>
+    <hr>
     <div id="app">
       <div>
       </div>
@@ -41,7 +63,7 @@
 	  <canvas id="mainCanvas" width="800" height="640">Your browser is too outdated to use Touhou 1CC Generator, please update at your earliest convenience.</canvas>
 	</div>
 	<div id="controls">
-	  <h3> Controls </h3>
+	  <h3>Controls</h3>
 	  <div id="debug">(Double-)Click a square!</div>
 	  <input type="checkbox" id="doneCheckbox" disabled>
 	  <label for="doneCheckbox">Done?</label>

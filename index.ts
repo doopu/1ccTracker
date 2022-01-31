@@ -8,7 +8,9 @@ const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 
 canvas.style.width="800px";
 canvas.style.height="640px";
-
+canvas.onselectstart = function () {
+   return false;
+}
 
 if (ctx) {
     // Dark voodoo
@@ -35,10 +37,12 @@ function drawBox(x: number, y: number, width: number = boxWidth, height: number 
 function drawBoxContents(x: number, y: number, boxName: string, colour: string) : void {
     const box = getBoxFromState([new Path2D(), boxName]);
     if (ctx) {
-	ctx.fillStyle = colour;
 	if (box.done) {
-	    ctx.fillRect(x, y, boxWidth, boxWidth);
+	    ctx.fillStyle = colour;
+	} else {
+	    ctx.fillStyle = 'white';
 	}
+	ctx.fillRect(x, y, boxWidth, boxWidth);
     }
 }
 
@@ -136,6 +140,16 @@ const pofv = new Game("POFV", "blue", "XLHN".split(''), [new Character("R"),
 							 new Character("K"),
 							 new Character("E")]);
 
+const mof = new Game("MOF", "rgba(255, 168, 0, 1.0)", "XLHN".split(''), [new Character("R", ["A", "B", "C"]),
+									 new Character("M", ["A", "B", "C"])]);
+
+const sa = new Game("SA", "rgba(0, 201, 109, 1.0)", "XLHN".split(''), [new Character("R", ["A", "B", "C"]),
+									 new Character("M", ["A", "B", "C"])]);
+
+const ufo = new Game("UFO", "rgba(197, 191, 255, 1.0)", "XLHN".split(''), [new Character("R", ["A", "B"]),
+									   new Character("M", ["A", "B"]),
+									   new Character("SN", ["A", "B"])]);
+
 let lastX = 0;
 let lastY = 0;
 
@@ -214,7 +228,7 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
 	    boxes.push([box, boxName]);
 
 	    drawBoxContents(baseX + (x * boxWidth), baseY + (y * boxWidth), boxName, game.colour);
-	    drawBox(baseX + (x * boxWidth), baseY + (y * boxWidth), boxWidth, boxWidth, 0.5);
+	    drawBox(baseX + (x * boxWidth), baseY + (y * boxWidth), boxWidth, boxWidth, 1);
 
 	    lastY = baseY + (y * boxWidth);
 	    y++;
@@ -224,12 +238,21 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
     }
 
     // Draw outer box
-    drawBox(baseX + 0, baseY + 0, boxWidth * width, boxWidth * height, 2.5);
+    drawBox(baseX + 0, baseY + 0, boxWidth * width, boxWidth * height, 2);
 
     // Draw characters
     let charX = 0;
     for (let character of game.characters) {
 	if (character.subcharacters.length > 0) {
+	    // If this is the first character, we need a long thick bar at the start..
+	    let lineWidth = 0.05;
+	    let xAdjust = 0.5;
+	    if (charX == 0) {
+		lineWidth = 1;
+		xAdjust = 0;
+	    }
+	    drawBox(xAdjust + (charX * boxWidth) + baseX - 0.5, lastY + boxWidth, lineWidth, boxWidth - 2, 1);
+
 	    drawText(character.name, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 14);
 	    for (let subcharacter of character.subcharacters) {
 		drawText(subcharacter, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 7, 'left', "12px touhouFont");
@@ -237,14 +260,27 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
 	    }
 	    charX -= 1;
 	} else {
+	    // If this is the first chracter, we need a thick short bar at the start, otherwise a thin one
+	    let lineWidth = 0.05;
+	    let xAdjust = 0.5;
+	    if (charX == 0) {
+		lineWidth = 1;
+		xAdjust = 0;
+	    }
+	    drawBox(xAdjust + baseX - 0.5 + (charX * boxWidth), lastY + boxWidth, lineWidth, boxWidth - 8, 1);
+
 	    drawText(character.name, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 8);
 	}
 	charX += 1;
     }
+    // Draw closing bar
+    drawBox(baseX - 0.5 + (charX * boxWidth), lastY + boxWidth, 1, boxWidth - 8, 1);
+
 }
 
 if (ctx) {
     canvas.addEventListener('click', function(event) {
+	event.preventDefault();
 	var ClientRect = canvas.getBoundingClientRect();
 	const x = Math.round(event.clientX - ClientRect.left) * 2;
 	const y = Math.round(event.clientY - ClientRect.top) * 2;
@@ -268,9 +304,11 @@ if (ctx) {
 	    }
 	    drawScreen();
 	}
+	return false;
     });
 
     canvas.addEventListener('dblclick', function(event) {
+	event.preventDefault();
 	var ClientRect = canvas.getBoundingClientRect();
 	const x = Math.round(event.clientX - ClientRect.left) * 2;
 	const y = Math.round(event.clientY - ClientRect.top) * 2;
@@ -290,6 +328,7 @@ if (ctx) {
 	    }
 	    drawScreen();
 	}
+	return false;
     });
 
     canvas.addEventListener('contextmenu', function(event) {
@@ -365,8 +404,6 @@ function drawScreen() {
     if (ctx) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
     drawText("1CC CHART", 0, 10);
     drawGame(htrp, 2, 40 + boxWidth, true);
     drawGame(soew, lastX + boxWidth, 40);
@@ -383,10 +420,13 @@ function drawScreen() {
     drawGame(imp, lastX + 2 * boxWidth, 40 + 6 * boxWidth, true);
     drawGame(pofv, lastX + 2 * boxWidth, 40 + 9 * boxWidth, true);
 
+    drawGame(mof, 2, 40 + 16 * boxWidth, true);
+    drawGame(sa, lastX + boxWidth, 40 + 16 * boxWidth);
+    drawGame(ufo, lastX + boxWidth, 40 + 16 * boxWidth);
+
     drawHighlight();
-    drawText("1CC CHART GENERATOR BY DOOPU", 0, 615);
-    drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 0, 623);
-    drawText("MAKE YOUR OWN AT TINYURL.COM/BDHVT732", 0, 631);
+    drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 798, 623, 'right');
+    drawText("MAKE YOUR OWN AT TINYURL.COM/BDHVT732", 798, 631, 'right');
 }
 
 const font = new FontFace('touhouFont', 'url(touhouFont2.ttf)');
