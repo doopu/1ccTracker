@@ -47,7 +47,7 @@ function drawExtraHeader(x, y) {
         ctx.lineTo(0, y);
         ctx.lineTo(canvas.width, y);
         ctx.stroke();
-        drawText("EXTRA", 0, y + 8);
+        drawText("EXTRA", 2, y + 8);
     }
 }
 function drawGFWBox(x, y) {
@@ -599,7 +599,7 @@ function drawScreen() {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
     }
-    drawText("1CC CHART", 0, 10);
+    drawText("1CC CHART", 2, 10);
     drawGame(htrp, 2, 40 + boxWidth, true);
     drawGame(soew, lastX + boxWidth, 40);
     drawGame(podd, lastX + boxWidth, 40 + boxWidth);
