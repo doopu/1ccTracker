@@ -22,6 +22,11 @@ if (ctx) {
 }
 
 let download = function(e: Event) {
+    deselectBox();
+    if (debugDiv) {
+	debugDiv.innerHTML = '(Double-)Click a square!';
+    }
+    drawScreen();
     var image = canvas.toDataURL("image/png");
     (e.target! as HTMLAnchorElement).href = image;
 };
@@ -35,6 +40,127 @@ function drawBox(x: number, y: number, width: number = boxWidth, height: number 
 	ctx.strokeStyle = strokeStyle;
 	ctx.lineWidth = lineWidth;
 	ctx.strokeRect(x, y, width, height);
+    }
+}
+
+function drawGFWBox(x: number, y: number) : void {
+    if (ctx) {
+	ctx.lineCap = 'butt';
+	ctx.lineJoin = 'miter';
+	ctx.strokeStyle = 'rgba(128, 128, 128, 1.0)';
+	ctx.lineWidth = 2.0;
+	// Do the really annoying thing of tracing around the box...
+	ctx.beginPath();
+	ctx.lineTo(x, y);
+	ctx.lineTo(x + boxWidth * 6, y);
+	ctx.lineTo(x + boxWidth * 6, y + boxWidth * 2);
+	ctx.lineTo(x + boxWidth * 7, y + boxWidth * 2);
+	ctx.lineTo(x + boxWidth * 7, y + boxWidth * 3);
+	ctx.lineTo(x, y + boxWidth * 3);
+	ctx.lineTo(x, y);
+	ctx.stroke();
+
+	// Add the special line to the EX box
+	ctx.lineWidth = 1.0;
+	ctx.beginPath();
+	ctx.lineTo(x + boxWidth * 6 + 2, y + boxWidth * 2);
+	ctx.lineTo(x + boxWidth * 6 + 2, y + boxWidth * 3 + 8);
+	ctx.lineTo(x + boxWidth * 6, y + boxWidth * 3 + 8);
+	ctx.stroke();
+    }
+}
+
+function drawLOLKBox(x: number, y: number) : void {
+    if (ctx) {
+	ctx.lineCap = 'butt';
+	ctx.lineJoin = 'miter';
+	ctx.strokeStyle = 'rgba(128, 128, 128, 1.0)';
+	ctx.lineWidth = 2.0;
+	// Do the really annoying thing of tracing around the box...
+	ctx.beginPath();
+	ctx.lineTo(x, y + boxWidth);
+	ctx.lineTo(x + boxWidth, y + boxWidth);
+	ctx.lineTo(x + boxWidth, y);
+	ctx.lineTo(x + boxWidth * 2, y);
+	ctx.lineTo(x + boxWidth * 2, y + boxWidth);
+
+	ctx.lineTo(x + boxWidth * 3, y + boxWidth);
+	ctx.lineTo(x + boxWidth * 3, y);
+	ctx.lineTo(x + boxWidth * 4, y);
+	ctx.lineTo(x + boxWidth * 4, y + boxWidth);
+
+	ctx.lineTo(x + boxWidth * 5, y + boxWidth);
+	ctx.lineTo(x + boxWidth * 5, y);
+	ctx.lineTo(x + boxWidth * 6, y);
+	ctx.lineTo(x + boxWidth * 6, y + boxWidth);
+
+	ctx.lineTo(x + boxWidth * 7, y + boxWidth);
+	ctx.lineTo(x + boxWidth * 7, y);
+	ctx.lineTo(x + boxWidth * 8, y);
+	ctx.lineTo(x + boxWidth * 8, y + boxWidth * 4);
+
+	ctx.lineTo(x, y + boxWidth * 4);
+	ctx.lineTo(x, y + boxWidth);
+
+	ctx.stroke();
+    }
+}
+
+function drawHSIFSBox(x: number, y: number) : void {
+    if (ctx) {
+	ctx.lineCap = 'square';
+	ctx.lineJoin = 'miter';
+	ctx.strokeStyle = 'rgba(128, 128, 128, 1.0)';
+	ctx.lineWidth = 2.0;
+	// Do the really annoying thing of tracing around the box...
+	ctx.beginPath();
+	ctx.lineTo(x, y);
+	ctx.lineTo(x + boxWidth, y);
+	ctx.lineTo(x + boxWidth, y + boxWidth);
+	ctx.lineTo(x + boxWidth * 4, y + boxWidth);
+
+	ctx.lineTo(x + boxWidth * 4, y);
+	ctx.lineTo(x + boxWidth * 5, y);
+	ctx.lineTo(x + boxWidth * 5, y + boxWidth);
+	ctx.lineTo(x + boxWidth * 8, y + boxWidth);
+
+	ctx.lineTo(x + boxWidth * 8, y);
+	ctx.lineTo(x + boxWidth * 9, y);
+	ctx.lineTo(x + boxWidth * 9, y + boxWidth);
+	ctx.lineTo(x + boxWidth * 12, y + boxWidth);
+
+	ctx.lineTo(x + boxWidth * 12, y);
+	ctx.lineTo(x + boxWidth * 13, y);
+	ctx.lineTo(x + boxWidth * 13, y + boxWidth);
+	ctx.lineTo(x + boxWidth * 16, y + boxWidth);
+
+	ctx.lineTo(x + boxWidth * 16, y + boxWidth * 4);
+	ctx.lineTo(x, y + boxWidth * 4);
+	ctx.lineTo(x, y);
+
+	ctx.stroke();
+
+	// Draw the X dividers
+	ctx.lineWidth = 1.0;
+	ctx.beginPath();
+	ctx.lineTo(x, y + boxWidth - 2);
+	ctx.lineTo(x + boxWidth, y + boxWidth - 2);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineTo(x + 4 * boxWidth, y + boxWidth - 2);
+	ctx.lineTo(x + 5 * boxWidth, y + boxWidth - 2);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineTo(x + 8 * boxWidth, y + boxWidth - 2);
+	ctx.lineTo(x + 9 * boxWidth, y + boxWidth - 2);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineTo(x + 12 * boxWidth, y + boxWidth - 2);
+	ctx.lineTo(x + 13 * boxWidth, y + boxWidth - 2);
+	ctx.stroke();
     }
 }
 
@@ -105,18 +231,18 @@ const ms = new Game("MS", "rgba(194, 36, 128, 1.0)", "XLHN".split(''), [new Char
 					  new Character("M"),
 					  new Character("MI"),
 					  new Character("YK")]);
-const eosd = new Game("EOSD", "red", "XLHN".split(''), [new Character("R", ["A", "B"]),
+const eosd = new Game("EOSD", "rgba(255, 51, 18, 1.0)", "XLHN".split(''), [new Character("R", ["A", "B"]),
 					      new Character("M", ["A", "B"])]);
 
-const stb = new Game("STB", "brown", ["85", "66"], [new Character("AY")]);
-const ds = new Game("DS", "blue", ["108", "58"], [new Character("AY"), new Character("HA")]);
-const isc = new Game("ISC", "brown", ["NI", "C"], [new Character("SJ")]);
+const stb = new Game("STB", "rgba(99, 44, 0, 1.0)", ["85", "66"], [new Character("AY")]);
+const ds = new Game("DS", "rgba(10, 34, 119, 1.0)", ["108", "58"], [new Character("AY"), new Character("HA")]);
+const isc = new Game("ISC", "rgba(99, 44, 0, 1.0)", ["NI", "C"], [new Character("SJ")]);
 
-const pcb = new Game("PCB", "pink", "PXLHN".split(''), [new Character("R", ["A", "B"]),
+const pcb = new Game("PCB", "rgba(255, 127, 191, 1.0)", "PXLHN".split(''), [new Character("R", ["A", "B"]),
 							new Character("M", ["A", "B"]),
 							new Character("S", ["A", "B"])]);
 
-const imp = new Game("IN", "brown", ["X", "B-L", "B-H", "B-N", "A-L", "A-H", "A-N"], [new Character("BT"),
+const imp = new Game("IN", "rgba(196, 101, 0, 1.0)", ["X", "B-L", "B-H", "B-N", "A-L", "A-H", "A-N"], [new Character("BT"),
 										      new Character("MT"),
 										      new Character("ST"),
 										      new Character("NT"),
@@ -129,7 +255,7 @@ const imp = new Game("IN", "brown", ["X", "B-L", "B-H", "B-N", "A-L", "A-H", "A-
 										      new Character("Y"),
 										      new Character("YY")]);
 
-const pofv = new Game("POFV", "blue", "XLHN".split(''), [new Character("R"),
+const pofv = new Game("POFV", "rgba(16, 15, 107, 1.0)", "XLHN".split(''), [new Character("R"),
 							 new Character("M"),
 							 new Character("S"),
 							 new Character("Y"),
@@ -150,10 +276,45 @@ const mof = new Game("MOF", "rgba(255, 168, 0, 1.0)", "XLHN".split(''), [new Cha
 const sa = new Game("SA", "rgba(0, 201, 109, 1.0)", "XLHN".split(''), [new Character("R", ["A", "B", "C"]),
 									 new Character("M", ["A", "B", "C"])]);
 
-const ufo = new Game("UFO", "rgba(197, 191, 255, 1.0)", "XLHN".split(''), [new Character("R", ["A", "B"]),
+const ufo = new Game("UFO", "rgba(127, 191, 255, 1.0)", "XLHN".split(''), [new Character("R", ["A", "B"]),
 									   new Character("M", ["A", "B"]),
 									   new Character("SN", ["A", "B"])]);
 
+const gfw = new Game("GFW", "rgba(127, 253, 255, 1.0)", "LHN".split(''), [new Character("A1"),
+									  new Character("A2"),
+									  new Character("B1"),
+									  new Character("B2"),
+									  new Character("C1"),
+									  new Character("C2"),
+									  new Character("EX")]);
+
+const td = new Game("TD", "rgba(255, 191, 127, 1.0)", "XLHN".split(''), [new Character("R"),
+									  new Character("M"),
+									  new Character("SN"),
+									  new Character("Y")]);
+
+const ddc = new Game("DDC", "rgba(123, 95, 135, 1.0)", "XLHN".split(''), [new Character("R", ["A", "B"]),
+									   new Character("M", ["A", "B"]),
+									   new Character("S", ["A", "B"])]);
+
+const lolk = new Game("LOLK", "rgba(159, 21, 41, 1.0)", "XLHN".split(''), [new Character("R", ["P", "L"]),
+									   new Character("M", ["P", "L"]),
+									   new Character("SN", ["P", "L"]),
+									   new Character("RS", ["P", "L"])]);
+
+const hsifs = new Game("HSIFS", "rgba(255, 127, 39, 1.0)", "XLHN".split(''), [new Character("R", ["SP", "SM", "F", "W"]),
+									      new Character("C", ["SP", "SM", "F", "W"]),
+									      new Character("AY", ["SP", "SM", "F", "W"]),
+									      new Character("M", ["SP", "SM", "F", "W"])]);
+
+const wbawc = new Game("WBAWC", "rgba(224, 66, 44, 1.0)", "XLHN".split(''), [new Character("R", ["W", "O", "E"]),
+									     new Character("M", ["W", "O", "E"]),
+									     new Character("Y", ["W", "O", "E"])]);
+
+const um = new Game("UM", "rgba(0, 201, 109, 1.0)", "XLHN".split(''), [new Character("R"),
+									  new Character("M"),
+									  new Character("S"),
+									  new Character("SN")]);
 let lastX = 0;
 let lastY = 0;
 
@@ -226,13 +387,22 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
     for (let character of expandedChars) {
 	y = 0;
 	for (let difficulty of game.difficulties) {
-	    let box : Path2D = new Path2D();
-	    box.rect(baseX + (x * boxWidth), baseY + (y * boxWidth), boxWidth, boxWidth);
-	    let boxName = game.name + '-' + character + '-' + difficulty;
-	    boxes.push([box, boxName]);
+	    // Some games need to skip boxes...
+	    let skipBox = false;
+	    skipBox = skipBox || (game.name === 'GFW' && character === 'EX' && difficulty !== 'N');
+	    skipBox = skipBox || (game.name === 'LOLK' && !character.endsWith('L') && difficulty === 'X');
+	    skipBox = skipBox || (game.name === 'HSIFS' && !character.endsWith('SP') && difficulty === 'X');
 
-	    drawBoxContents(baseX + (x * boxWidth), baseY + (y * boxWidth), boxName, game.colour);
-	    drawBox(baseX + (x * boxWidth), baseY + (y * boxWidth), boxWidth, boxWidth, 1);
+	    if (!skipBox)
+	    {
+		let box : Path2D = new Path2D();
+		box.rect(baseX + (x * boxWidth), baseY + (y * boxWidth), boxWidth, boxWidth);
+		let boxName = game.name + '-' + character + '-' + difficulty;
+		boxes.push([box, boxName]);
+
+		drawBoxContents(baseX + (x * boxWidth), baseY + (y * boxWidth), boxName, game.colour);
+		drawBox(baseX + (x * boxWidth), baseY + (y * boxWidth), boxWidth, boxWidth, 1);
+	    }
 
 	    lastY = baseY + (y * boxWidth);
 	    y++;
@@ -241,8 +411,20 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
 	x++;
     }
 
-    // Draw outer box
-    drawBox(baseX + 0, baseY + 0, boxWidth * width, boxWidth * height, 2);
+    // Draw outer box, except for annoying games like LOLK, GFW and HSIFS.
+    if (game.name !== 'LOLK' && game.name !== 'GFW' && game.name !== 'HSIFS') {
+	drawBox(baseX + 0, baseY + 0, boxWidth * width, boxWidth * height, 2);
+    }
+
+    if (game.name === 'LOLK') {
+	drawLOLKBox(baseX, baseY);
+    }
+    if (game.name === 'GFW') {
+	drawGFWBox(baseX + 0, baseY + 0);
+    }
+    if (game.name === 'HSIFS') {
+	drawHSIFSBox(baseX, baseY);
+    }
 
     // Draw characters
     let charX = 0;
@@ -267,13 +449,17 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
 	    // If this is the first chracter, we need a thick short bar at the start, otherwise a thin one
 	    let lineWidth = 0.05;
 	    let xAdjust = 0.5;
+	    let textAdjust = 0;
 	    if (charX == 0) {
 		lineWidth = 1;
 		xAdjust = 0;
 	    }
+	    if (game.name === 'GFW' && character.name === 'EX') {
+		textAdjust = 1;
+	    }
 	    drawBox(xAdjust + baseX - 0.5 + (charX * boxWidth), lastY + boxWidth, lineWidth, boxWidth - 8, 1);
 
-	    drawText(character.name, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 8);
+	    drawText(character.name, textAdjust + baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 8);
 	}
 	charX += 1;
     }
@@ -299,7 +485,6 @@ if (ctx) {
 		if (debugDiv) {
 		    debugDiv.innerHTML = box[1];
 		}
-		console.log(box[1]);
 		break;
 	    }
 	}
@@ -352,6 +537,9 @@ let selectedBox : [Path2D, string] | null = null;
 function setupControls() {
     const doneCheckbox: HTMLInputElement | null = document.getElementById('doneCheckbox') as HTMLInputElement;
     doneCheckbox.addEventListener('change', updateDoneStatus);
+
+    const bgCheckbox: HTMLInputElement | null = document.getElementById('useBackgroundCheckbox') as HTMLInputElement;
+    bgCheckbox.addEventListener('change', updateBgStatus);
 }
 
 function toggleDone()
@@ -372,6 +560,13 @@ function updateDoneStatus(e: Event) {
 	setBoxInState(currentBox);
 	drawScreen();
     }
+}
+
+let transparentPng = true;
+
+function updateBgStatus(e: Event) {
+    transparentPng = (e.target! as HTMLInputElement).checked;
+    drawScreen();
 }
 
 function selectBox(box : [Path2D, string]) {
@@ -409,6 +604,10 @@ function drawScreen() {
     boxes = [];
     if (ctx) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	if (!transparentPng) {
+	    ctx.fillStyle = 'white';
+	    ctx.fillRect(0, 0, canvas.width, canvas.height);
+	}
     }
     drawText("1CC CHART", 0, 10);
     drawGame(htrp, 2, 40 + boxWidth, true);
@@ -429,10 +628,20 @@ function drawScreen() {
     drawGame(mof, 2, 40 + 16 * boxWidth, true);
     drawGame(sa, lastX + boxWidth, 40 + 16 * boxWidth);
     drawGame(ufo, lastX + boxWidth, 40 + 16 * boxWidth);
+    drawGame(gfw, lastX + boxWidth, 40 + 17 * boxWidth);
+
+    drawGame(td, lastX + 3 * boxWidth, 40 + 16 * boxWidth, true);
+    drawGame(ddc, lastX + boxWidth, 40 + 16 * boxWidth);
+    drawGame(lolk, lastX + boxWidth, 40 + 16 * boxWidth);
+
+    drawGame(hsifs, 2, 40 + 22 * boxWidth, true);
+
+    drawGame(wbawc, lastX + 3 * boxWidth, 40 + 22 * boxWidth, true);
+    drawGame(um, lastX + boxWidth, 40 + 22 * boxWidth);
 
     drawHighlight();
-    drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 798, 623, 'right');
-    drawText("MAKE YOUR OWN AT TINYURL.COM/BDHVT732", 798, 631, 'right');
+    drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 798, 10, 'right');
+    drawText("MAKE YOUR OWN AT TINYURL.COM/BDHVT732", 798, 18, 'right');
 }
 
 const font = new FontFace('touhouFont', 'url(touhouFont2.ttf)');
