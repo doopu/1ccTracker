@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Touhou 1CC Generator</title>
+    <link rel="stylesheet" src="index.css">
+    <style>
+      @font-face {
+	  font-family: "touhouFont";
+	  src: url("touhouFont2.ttf");
+      }
+      canvas {
+	  image-rendering: pixelated;
+	  image-rendering: crisp-edges;
+      }
+      #container {
+	  width: 1024px;
+	  height: 640px;
+	  align-content: center;
+      }
+      .flex {
+	  display: flex;
+	  flex-wrap: wrap;
+      }
+  </style>
+</head>
+  <body>
+    <div style="font-family: 'touhouFont'; font-size: 20px">TOUHOU 1CC GENERATOR</div><br/>
+    <div id="app">
+      <div>
+      </div>
+      <div id="container" class="flex">
+	<div>
+	  <canvas id="mainCanvas" width="800" height="640">Your browser is too outdated to use Touhou 1CC Generator, please update at your earliest convenience.</canvas>
+	</div>
+	<div id="controls">
+	  <div id="debug">(Double-)Click a square!</div>
+	  <input type="checkbox" id="doneCheckbox" disabled>
+	  <label for="doneCheckbox">Done?</label>
+	</div>
+      </div>
+      <div>
+	By Doopu; Original Template Author Unknown (Let Me Know!)
+      </div>
+      <script src="index.js"></script>
+    </div>
+  </body>
+</html>
