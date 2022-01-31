@@ -749,7 +749,7 @@ function drawScreen() {
 
     drawHighlight();
     drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 798, 10, 'right');
-    drawText("MAKE YOUR OWN AT TINYURL.COM/BDHVT732", 798, 18, 'right');
+    drawText("MAKE YOUR OWN AT TINYURL.COM/TJ9829WC", 798, 18, 'right');
 }
 
 const font = new FontFace('touhouFont', 'url(touhouFont2.ttf)');
