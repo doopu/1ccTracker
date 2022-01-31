@@ -2,6 +2,7 @@ const appDiv: HTMLElement | null = document.getElementById('app');
 const debugDiv: HTMLElement | null = document.getElementById('debug');
 
 const canvas: HTMLCanvasElement = document.getElementById('mainCanvas') as HTMLCanvasElement;
+const downloadButton: HTMLAnchorElement = document.getElementById('download') as HTMLAnchorElement;
 const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 
 canvas.style.width="800px";
@@ -19,6 +20,11 @@ if (ctx) {
     ctx.scale(scale, scale);
     ctx.imageSmoothingEnabled = false;
 }
+
+let download = function(e: Event) {
+    var image = canvas.toDataURL("image/png");
+    (e.target! as HTMLAnchorElement).href = image;
+};
 
 const boxWidth = 16;
 
@@ -277,6 +283,8 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
 }
 
 if (ctx) {
+    downloadButton.addEventListener('click', download);
+
     canvas.addEventListener('click', function(event) {
 	event.preventDefault();
 	var ClientRect = canvas.getBoundingClientRect();
@@ -452,11 +460,6 @@ function loadState() {
 	state = new Map(JSON.parse(window.localStorage.getItem('state')!)!)!;
     }
 }
-
-function download(element: HTMLLinkElement) {
-  var image = canvas.toDataURL("image/png");
-  element.href = image;
-};
 
 font.load().then(function() {
     loadState();

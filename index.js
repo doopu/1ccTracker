@@ -2,6 +2,7 @@
 const appDiv = document.getElementById('app');
 const debugDiv = document.getElementById('debug');
 const canvas = document.getElementById('mainCanvas');
+const downloadButton = document.getElementById('download');
 const ctx = canvas.getContext("2d");
 canvas.style.width = "800px";
 canvas.style.height = "640px";
@@ -17,6 +18,10 @@ if (ctx) {
     ctx.scale(scale, scale);
     ctx.imageSmoothingEnabled = false;
 }
+let download = function (e) {
+    var image = canvas.toDataURL("image/png");
+    e.target.href = image;
+};
 const boxWidth = 16;
 function drawBox(x, y, width = boxWidth, height = boxWidth, lineWidth = 1.0, strokeStyle = 'rgba(128, 128, 128, 1.0)') {
     if (ctx) {
@@ -228,6 +233,7 @@ function drawGame(game, baseX, baseY, drawDifficulties = false) {
     drawBox(baseX - 0.5 + (charX * boxWidth), lastY + boxWidth, 1, boxWidth - 8, 1);
 }
 if (ctx) {
+    downloadButton.addEventListener('click', download);
     canvas.addEventListener('click', function (event) {
         event.preventDefault();
         var ClientRect = canvas.getBoundingClientRect();
@@ -381,11 +387,6 @@ function loadState() {
         state = new Map(JSON.parse(window.localStorage.getItem('state')));
     }
 }
-function download(element) {
-    var image = canvas.toDataURL("image/png");
-    element.href = image;
-}
-;
 font.load().then(function () {
     loadState();
     setupControls();
