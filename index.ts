@@ -365,6 +365,8 @@ function drawScreen() {
     if (ctx) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     drawText("1CC CHART", 0, 10);
     drawGame(htrp, 2, 40 + boxWidth, true);
     drawGame(soew, lastX + boxWidth, 40);
@@ -384,7 +386,7 @@ function drawScreen() {
     drawHighlight();
     drawText("1CC CHART GENERATOR BY DOOPU", 0, 615);
     drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 0, 623);
-    drawText("MAKE YOUR OWN AT ", 0, 631);
+    drawText("MAKE YOUR OWN AT TINYURL.COM/BDHVT732", 0, 631);
 }
 
 const font = new FontFace('touhouFont', 'url(touhouFont2.ttf)');

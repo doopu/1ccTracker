@@ -14,18 +14,25 @@
 	  image-rendering: crisp-edges;
       }
       #container {
-	  width: 1024px;
+	  width: 1200px;
 	  height: 640px;
 	  align-content: center;
       }
       .flex {
 	  display: flex;
 	  flex-wrap: wrap;
+	  gap: 10px;
+      }
+      body {
+	  background-color:  #fefbe9;
+      }
+      div {
+	  color: #183a1d;
       }
   </style>
 </head>
   <body>
-    <div style="font-family: 'touhouFont'; font-size: 20px">TOUHOU 1CC GENERATOR</div><br/>
+    <div style="font-family: 'touhouFont'; font-size: 40px">TOUHOU 1CC GENERATOR</div><br/>
     <div id="app">
       <div>
       </div>
@@ -34,9 +41,12 @@
 	  <canvas id="mainCanvas" width="800" height="640">Your browser is too outdated to use Touhou 1CC Generator, please update at your earliest convenience.</canvas>
 	</div>
 	<div id="controls">
+	  <h3> Controls </h3>
 	  <div id="debug">(Double-)Click a square!</div>
 	  <input type="checkbox" id="doneCheckbox" disabled>
 	  <label for="doneCheckbox">Done?</label>
+	  <hr>
+	  <div>Right-click and save when you're done!</div>
 	</div>
       </div>
       <script src="index.js"></script>
