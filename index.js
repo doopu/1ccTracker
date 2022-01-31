@@ -1,5 +1,4 @@
 "use strict";
-const world = 'my love';
 const appDiv = document.getElementById('app');
 const debugDiv = document.getElementById('debug');
 const canvas = document.getElementById('mainCanvas');
@@ -207,7 +206,7 @@ function drawGame(game, baseX, baseY, drawDifficulties = false) {
             drawBox(xAdjust + (charX * boxWidth) + baseX - 0.5, lastY + boxWidth, lineWidth, boxWidth - 2, 1);
             drawText(character.name, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 14);
             for (let subcharacter of character.subcharacters) {
-                drawText(subcharacter, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 7, 'left', "12px touhouFont");
+                drawText(subcharacter, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 7, 'left', "13px touhouFont");
                 charX += 1;
             }
             charX -= 1;
@@ -382,6 +381,11 @@ function loadState() {
         state = new Map(JSON.parse(window.localStorage.getItem('state')));
     }
 }
+function download(element) {
+    var image = canvas.toDataURL("image/png");
+    element.href = image;
+}
+;
 font.load().then(function () {
     loadState();
     setupControls();

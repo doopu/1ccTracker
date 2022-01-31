@@ -1,5 +1,3 @@
-const world = 'my love';
-
 const appDiv: HTMLElement | null = document.getElementById('app');
 const debugDiv: HTMLElement | null = document.getElementById('debug');
 
@@ -255,7 +253,7 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
 
 	    drawText(character.name, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 14);
 	    for (let subcharacter of character.subcharacters) {
-		drawText(subcharacter, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 7, 'left', "12px touhouFont");
+		drawText(subcharacter, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 7, 'left', "13px touhouFont");
 		charX += 1;
 	    }
 	    charX -= 1;
@@ -455,6 +453,10 @@ function loadState() {
     }
 }
 
+function download(element: HTMLLinkElement) {
+  var image = canvas.toDataURL("image/png");
+  element.href = image;
+};
 
 font.load().then(function() {
     loadState();
