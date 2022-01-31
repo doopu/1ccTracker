@@ -43,6 +43,23 @@ function drawBox(x: number, y: number, width: number = boxWidth, height: number 
     }
 }
 
+function drawExtraHeader(x: number, y: number) : void {
+    if (ctx) {
+	ctx.lineCap = 'butt';
+	ctx.lineJoin = 'miter';
+	ctx.strokeStyle = 'rgba(128, 128, 128, 1.0)';
+	ctx.lineWidth = 1.0;
+
+	ctx.beginPath();
+	ctx.lineTo(0, y);
+	ctx.lineTo(canvas.width, y);
+	ctx.stroke();
+
+	drawText("EXTRA", 0, y + 8);
+
+    }
+}
+
 function drawGFWBox(x: number, y: number) : void {
     if (ctx) {
 	ctx.lineCap = 'butt';
@@ -315,6 +332,77 @@ const um = new Game("UM", "rgba(0, 201, 109, 1.0)", "XLHN".split(''), [new Chara
 									  new Character("M"),
 									  new Character("S"),
 									  new Character("SN")]);
+
+const iamp = new Game("IAMP", "rgba(78, 22, 86, 1.0)", "LHN".split(''), [new Character("R"),
+									 new Character("M"),
+									 new Character("S"),
+									 new Character("A"),
+									 new Character("P"),
+									 new Character("Y"),
+									 new Character("RE"),
+									 new Character("YY"),
+									 new Character("YU"),
+									 new Character("SU")]);
+
+const swr = new Game("SWR", "rgba(255, 51, 18, 1.0)", "LHN".split(''), [new Character("R"),
+									new Character("M"),
+									new Character("S"),
+									new Character("A"),
+									new Character("P"),
+									new Character("Y"),
+									new Character("RE"),
+									new Character("YY"),
+									new Character("YU"),
+									new Character("SU"),
+									new Character("RS"),
+									new Character("AY"),
+									new Character("K"),
+									new Character("I"),
+									new Character("TE")]);
+
+const hsoku = new Game("H.SOKU", "rgba(210, 210, 210, 1.0)", "LHN".split(''), [new Character("SN"),
+									new Character("C"),
+									new Character("ML")]);
+
+const hm = new Game("HM", "rgba(179, 193, 148, 1.0)", "LHN".split(''), [new Character("R"),
+									 new Character("M"),
+									 new Character("IC"),
+									 new Character("B"),
+									 new Character("F"),
+									 new Character("TO"),
+									 new Character("N"),
+									 new Character("KO"),
+									 new Character("MA"),
+									 new Character("KK")]);
+
+const ulil = new Game("ULIL", "rgba(0, 136, 148, 1.0)", "LHN".split(''), [new Character("R1"),
+									  new Character("M"),
+									  new Character("IC"),
+									  new Character("B"),
+									  new Character("F"),
+									  new Character("TO"),
+									  new Character("N"),
+									  new Character("KO"),
+									  new Character("MA"),
+									  new Character("KK"),
+									  new Character("MO"),
+									  new Character("SH"),
+									  new Character("KA"),
+									  new Character("SM"),
+									  new Character("R2")]);
+
+const aocf = new Game("AOCF", "rgba(201, 143, 255, 1.0)", "LHN".split(''), [new Character("R"),
+									    new Character("M"),
+									    new Character("N"),
+									    new Character("MA"),
+									    new Character("TO"),
+									    new Character("F"),
+									    new Character("RS"),
+									    new Character("SM"),
+									    new Character("TE"),
+									    new Character("YU"),
+									    new Character("J")]);
+
 let lastX = 0;
 let lastY = 0;
 
@@ -540,6 +628,9 @@ function setupControls() {
 
     const bgCheckbox: HTMLInputElement | null = document.getElementById('useBackgroundCheckbox') as HTMLInputElement;
     bgCheckbox.addEventListener('change', updateBgStatus);
+
+    const fightingCheckbox: HTMLInputElement | null = document.getElementById('fightingCheckbox') as HTMLInputElement;
+    fightingCheckbox.addEventListener('change', updateFightingStatus);
 }
 
 function toggleDone()
@@ -563,9 +654,15 @@ function updateDoneStatus(e: Event) {
 }
 
 let transparentPng = true;
+let showFighting = true;
 
 function updateBgStatus(e: Event) {
     transparentPng = (e.target! as HTMLInputElement).checked;
+    drawScreen();
+}
+
+function updateFightingStatus(e: Event) {
+    showFighting = (e.target! as HTMLInputElement).checked;
     drawScreen();
 }
 
@@ -625,19 +722,30 @@ function drawScreen() {
     drawGame(imp, lastX + 2 * boxWidth, 40 + 6 * boxWidth, true);
     drawGame(pofv, lastX + 2 * boxWidth, 40 + 9 * boxWidth, true);
 
-    drawGame(mof, 2, 40 + 16 * boxWidth, true);
-    drawGame(sa, lastX + boxWidth, 40 + 16 * boxWidth);
-    drawGame(ufo, lastX + boxWidth, 40 + 16 * boxWidth);
-    drawGame(gfw, lastX + boxWidth, 40 + 17 * boxWidth);
+    drawGame(mof, 2, 40 + 15 * boxWidth, true);
+    drawGame(sa, lastX + boxWidth, 40 + 15 * boxWidth);
+    drawGame(ufo, lastX + boxWidth, 40 + 15 * boxWidth);
+    drawGame(gfw, lastX + boxWidth, 40 + 16 * boxWidth);
 
-    drawGame(td, lastX + 3 * boxWidth, 40 + 16 * boxWidth, true);
-    drawGame(ddc, lastX + boxWidth, 40 + 16 * boxWidth);
-    drawGame(lolk, lastX + boxWidth, 40 + 16 * boxWidth);
+    drawGame(td, lastX + 3 * boxWidth, 40 + 15 * boxWidth, true);
+    drawGame(ddc, lastX + boxWidth, 40 + 15 * boxWidth);
+    drawGame(lolk, lastX + boxWidth, 40 + 15 * boxWidth);
 
-    drawGame(hsifs, 2, 40 + 22 * boxWidth, true);
+    drawGame(hsifs, 2, 40 + 21 * boxWidth, true);
 
-    drawGame(wbawc, lastX + 3 * boxWidth, 40 + 22 * boxWidth, true);
-    drawGame(um, lastX + boxWidth, 40 + 22 * boxWidth);
+    drawGame(wbawc, lastX + 3 * boxWidth, 40 + 21 * boxWidth, true);
+    drawGame(um, lastX + boxWidth, 40 + 21 * boxWidth);
+
+    if (showFighting) {
+	drawExtraHeader(lastX, 40 + 26.7 * boxWidth);
+	drawGame(iamp, 2, 40 + 28 * boxWidth, true);
+	drawGame(swr, lastX + boxWidth, 40 + 28 * boxWidth);
+	drawGame(hsoku, lastX + boxWidth, 40 + 28 * boxWidth);
+	drawGame(hm, lastX + boxWidth, 40 + 28 * boxWidth);
+
+	drawGame(ulil, 2, 40 + 33 * boxWidth, true);
+	drawGame(aocf, lastX + boxWidth, 40 + 33 * boxWidth);
+    }
 
     drawHighlight();
     drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 798, 10, 'right');
