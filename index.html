@@ -9,9 +9,15 @@
 	  font-family: "touhouFont";
 	  src: url("touhouFont2.ttf");
       }
+      @font-face {
+	  font-family: "touhouFontMini";
+	  src: url("touhouFontLittle.ttf");
+      }
       canvas {
 	  image-rendering: pixelated;
 	  image-rendering: crisp-edges;
+	  font-smooth: never;
+	  -webkit-font-smoothing : none;
       }
       #container {
 	  width: 1200px;
@@ -57,7 +63,7 @@ html {
       <div>
       </div>
       <div id="container" class="flex">
-	<div>
+	<div id="parentDiv">
 	  <canvas id="mainCanvas" width="800" height="640">Your browser is too outdated to use Touhou 1CC Generator, please update at your earliest convenience.</canvas>
 	</div>
 	<div id="controls">
