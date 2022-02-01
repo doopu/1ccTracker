@@ -937,7 +937,7 @@ function drawLegend() {
         drawBox(topLeft + 5, 3 * boxWidth + yOffset + 14, boxWidth, boxWidth, 1.0);
         drawText("U", textOffset + 8 + boxWidth, yOffset + 21 + boxWidth * 3, 'left', "16px touhouFont", "red");
         drawText(" NIQUE", textOffset + 8 + boxWidth, yOffset + 21 + boxWidth * 3);
-        drawText(" GAME-SPECIFIC", textOffset + 8 + boxWidth, yOffset + 27 + boxWidth * 3);
+        drawText(" (GAME-SPECIFIC)", textOffset + 6 + boxWidth, yOffset + 27 + boxWidth * 3);
         drawText("LIMITATION", textOffset + 8 + boxWidth, yOffset + 33 + boxWidth * 3);
         yOffset = 10 * boxWidth + 6;
         drawText("METADATA", textOffset + 5, yOffset + 6);
@@ -951,7 +951,7 @@ function drawLegend() {
         drawBox(topLeft + 5.5 + boxWidth * 4, yOffset + 14, boxWidth, boxWidth, 1.0);
         drawBoxContentsAux(topLeft + 5.5 + boxWidth * 6, yOffset + 14, false, "0", "0", "1", true, true, true, true, "#FFFFFF", "#000000", "#FFFFFF");
         drawBox(topLeft + 5.5 + boxWidth * 6, yOffset + 14, boxWidth, boxWidth, 1.0);
-        drawText("CREATE YOUR CHART AT", textOffset + 5, yOffset + 48);
+        drawText("CREATE YOUR CHART AT:", textOffset + 5, yOffset + 48);
         drawText("TINYURL.COM/TJ9829WC", textOffset + 5, yOffset + 54);
         drawText("FONT SIZE 5 PIXELS", textOffset + 5, yOffset + 70);
     }
