@@ -11,8 +11,7 @@ canvas.onselectstart = function () {
 };
 if (ctx) {
     // Dark voodoo
-    window.devicePixelRatio = 2;
-    var scale = window.devicePixelRatio;
+    var scale = 1;
     canvas.width = Math.floor(800 * scale);
     canvas.height = Math.floor(640 * scale);
     ctx.scale(scale, scale);
@@ -343,7 +342,17 @@ function drawText(text, x, y, align = 'left', font = "16px touhouFont") {
         ctx.font = font;
         ctx.textAlign = align;
         ctx.fillStyle = 'black';
-        ctx.fillText(text, x, y);
+        ctx.fillText(text, x - 0.5, y - 0.1);
+    }
+}
+function drawUILine(x, y, drop, width) {
+    if (ctx) {
+        ctx.beginPath();
+        ctx.lineTo(x, y);
+        ctx.lineTo(x, y + drop);
+        ctx.strokeStyle = 'rgba(128, 128, 128, 1.0)';
+        ctx.lineWidth = width;
+        ctx.stroke();
     }
 }
 function drawDot(colour, x, y, width = 2) {
@@ -418,29 +427,31 @@ function drawGame(game, baseX, baseY, drawDifficulties = false) {
     }
     // Draw outer box, except for annoying games like LOLK, GFW and HSIFS.
     if (game.name !== 'LOLK' && game.name !== 'GFW' && game.name !== 'HSIFS') {
-        drawBox(baseX + 0, baseY + 0, boxWidth * width, boxWidth * height, 2);
+        drawBox(baseX - 0.5, baseY - 0.5, boxWidth * width, boxWidth * height, 2);
     }
     if (game.name === 'LOLK') {
-        drawLOLKBox(baseX, baseY);
+        drawLOLKBox(baseX - 0.5, baseY - 0.5);
     }
     if (game.name === 'GFW') {
-        drawGFWBox(baseX + 0, baseY + 0);
+        drawGFWBox(baseX - 0.5, baseY - 0.5);
     }
     if (game.name === 'HSIFS') {
-        drawHSIFSBox(baseX, baseY);
+        drawHSIFSBox(baseX - 0.5, baseY - 0.5);
     }
     // Draw characters
     let charX = 0;
     for (let character of game.characters) {
         if (character.subcharacters.length > 0) {
+            let lineWidth = 1;
+            let xAdjust = 0;
+            let yAdjust = 0;
             // If this is the first character, we need a long thick bar at the start..
-            let lineWidth = 0.05;
-            let xAdjust = 0.5;
             if (charX == 0) {
-                lineWidth = 1;
-                xAdjust = 0;
+                lineWidth = 2;
+                xAdjust = -0.5;
+                yAdjust = 0.5;
             }
-            drawBox(xAdjust + (charX * boxWidth) + baseX - 0.5, lastY + boxWidth, lineWidth, boxWidth - 2, 1);
+            drawUILine(xAdjust + (charX * boxWidth) + baseX, yAdjust + lastY + boxWidth, boxWidth - 2, lineWidth);
             drawText(character.name, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 14);
             for (let subcharacter of character.subcharacters) {
                 drawText(subcharacter, baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 7, 'left', "13px touhouFont");
@@ -450,23 +461,23 @@ function drawGame(game, baseX, baseY, drawDifficulties = false) {
         }
         else {
             // If this is the first chracter, we need a thick short bar at the start, otherwise a thin one
-            let lineWidth = 0.05;
-            let xAdjust = 0.5;
+            let lineWidth = 1;
+            let xAdjust = 1;
             let textAdjust = 0;
             if (charX == 0) {
-                lineWidth = 1;
-                xAdjust = 0;
+                lineWidth = 2;
+                xAdjust = 0.5;
             }
             if (game.name === 'GFW' && character.name === 'EX') {
                 textAdjust = 1;
             }
-            drawBox(xAdjust + baseX - 0.5 + (charX * boxWidth), lastY + boxWidth, lineWidth, boxWidth - 8, 1);
+            drawUILine(xAdjust + baseX - 1 + (charX * boxWidth), lastY + boxWidth, boxWidth - 8, lineWidth);
             drawText(character.name, textAdjust + baseX + (charX * boxWidth) + 2, lastY + (boxWidth) + 8);
         }
         charX += 1;
     }
     // Draw closing bar
-    drawBox(baseX - 0.5 + (charX * boxWidth), lastY + boxWidth, 1, boxWidth - 8, 1);
+    drawUILine(baseX - 0.5 + (charX * boxWidth), lastY + boxWidth + 0.5, boxWidth - 8, 2);
 }
 if (ctx) {
     downloadButton.addEventListener('click', download);
