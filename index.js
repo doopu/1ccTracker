@@ -182,13 +182,13 @@ function drawBoxContents(x, y, boxName, colour) {
         // Draw the little bits and pieces
         // Draw miss/bomb/starting counts
         if (box.misses) {
-            drawText(box.misses, x + 2, y + 7, 'left', "16px touhouFontMini");
+            drawText(box.misses, x + 2, y + 7, 'left', "16px touhouFontMini", box.textColour);
         }
         if (box.bombs) {
-            drawText(box.bombs, x + 7, y + 7, 'left', "16px touhouFontMini");
+            drawText(box.bombs, x + 7, y + 7, 'left', "16px touhouFontMini", box.textColour);
         }
         if (box.lives) {
-            drawText(box.lives, x + 16, y + 7, 'right', "16px touhouFontMini");
+            drawText(box.lives, x + 16, y + 7, 'right', "16px touhouFontMini", box.textColour);
         }
         // No vertical?
         if (box.vertical) {
@@ -201,13 +201,13 @@ function drawBoxContents(x, y, boxName, colour) {
         }
         // No focus / pacifist / unique
         if (box.focus) {
-            drawText("F", x + 2, y + 15, 'left', "16px touhouFontMini");
+            drawText("F", x + 2, y + 15, 'left', "16px touhouFontMini", box.textColour);
         }
         if (box.pacifist) {
-            drawText("P", x + 7, y + 15, 'left', "16px touhouFontMini");
+            drawText("P", x + 7, y + 15, 'left', "16px touhouFontMini", box.textColour);
         }
         if (box.unique) {
-            drawText("U", x + 12, y + 15, 'left', "16px touhouFontMini");
+            drawText("U", x + 12, y + 15, 'left', "16px touhouFontMini", box.textColour);
         }
         // Bug abuse? It doesn't render nice and I don't care for it anyway.
         // ctx.lineWidth = 1;
@@ -401,12 +401,12 @@ const aocf = new Game("AOCF", "rgba(201, 143, 255, 1.0)", "LHN".split(''), [new 
     new Character("J")]);
 let lastX = 0;
 let lastY = 0;
-function drawText(text, x, y, align = 'left', font = "16px touhouFont") {
+function drawText(text, x, y, align = 'left', font = "16px touhouFont", colour = "black") {
     x -= 0.5; // Dumb hack for Windows
     if (ctx) {
         ctx.font = font;
         ctx.textAlign = align;
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = colour;
         ctx.fillText(text, x, y - 1);
     }
 }
@@ -643,6 +643,8 @@ function setupControls() {
     bgCheckbox.addEventListener('change', updateBgStatus);
     const fightingCheckbox = document.getElementById('fightingCheckbox');
     fightingCheckbox.addEventListener('change', updateFightingStatus);
+    const legendCheckbox = document.getElementById('legendCheckbox');
+    legendCheckbox.addEventListener('change', updateLegendStatus);
 }
 function toggleDone() {
     if (selectedBox) {
@@ -735,8 +737,13 @@ function updateMisses(e) {
 }
 let transparentPng = true;
 let showFighting = true;
+let showLegend = true;
 function updateBgStatus(e) {
     transparentPng = e.target.checked;
+    drawScreen();
+}
+function updateLegendStatus(e) {
+    showLegend = e.target.checked;
     drawScreen();
 }
 function updateFightingStatus(e) {
@@ -856,13 +863,56 @@ function drawLegend() {
         ctx.fillStyle = 'white';
         ctx.fillRect(topLeft, -2.5, 8 * boxWidth, 15 * boxWidth);
         drawBox(canvas.width - 8 * boxWidth + 2.5, -2.5, 8 * boxWidth, 15 * boxWidth, 2.0);
+        drawBox(canvas.width - 8 * boxWidth + 2.5, -2.5, 8 * boxWidth, 10 * boxWidth + 6, 2.0);
         drawText("LEGEND", topLeft + 5, 8);
+        let yOffset = 0;
         drawBox(topLeft + 5, 14 + 0.5, 4 * boxWidth, boxWidth, 2.0);
         drawBox(topLeft + 5.5, 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 2 * boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 3 * boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawText("MISS COUNT", topLeft + 5, 8 + boxWidth * 2 - 3);
+        yOffset = boxWidth * 2 - 6;
+        drawBox(topLeft + 5, yOffset + 14 + 0.5, 4 * boxWidth, boxWidth, 2.0);
+        drawBox(topLeft + 5.5, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawBox(topLeft + 5.5 + boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawBox(topLeft + 5.5 + 2 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawBox(topLeft + 5.5 + 3 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawText("BOMB COUNT", topLeft + 5, yOffset + 8 + boxWidth * 2 - 3);
+        yOffset = boxWidth * 4 - 12;
+        drawBox(topLeft + 5, yOffset + 14 + 0.5, 6 * boxWidth, boxWidth, 2.0);
+        drawBox(topLeft + 5.5, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawBox(topLeft + 5.5 + boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawBox(topLeft + 5.5 + 2 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawBox(topLeft + 5.5 + 3 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawBox(topLeft + 5.5 + 4 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawBox(topLeft + 5.5 + 5 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawText("STARTING LIVES", topLeft + 5, yOffset + 8 + boxWidth * 2 - 3);
+        yOffset = boxWidth * 6 - 18;
+        drawBox(topLeft + 5, yOffset + 14 + 0.5, boxWidth, boxWidth * 4, 2.0);
+        drawBox(topLeft + 5, yOffset + 14, boxWidth, boxWidth, 1.0);
+        drawText("NO", topLeft + 8 + boxWidth, yOffset + 22);
+        drawText("VERTICAL", topLeft + 8 + boxWidth, yOffset + 28);
+        drawBox(topLeft + 5, boxWidth + yOffset + 14, boxWidth, boxWidth, 1.0);
+        drawText("F", topLeft + 26 + boxWidth, yOffset + 21 + boxWidth, 'left', "16px touhouFont", "red");
+        drawText("NO  OCUS", topLeft + 8 + boxWidth, yOffset + 21 + boxWidth);
+        drawBox(topLeft + 5, 2 * boxWidth + yOffset + 14, boxWidth, boxWidth, 1.0);
+        drawText("P", topLeft + 8 + boxWidth, yOffset + 21 + boxWidth * 2, 'left', "16px touhouFont", "red");
+        drawText(" ACIFIST", topLeft + 8 + boxWidth, yOffset + 21 + boxWidth * 2);
+        drawBox(topLeft + 5, 3 * boxWidth + yOffset + 14, boxWidth, boxWidth, 1.0);
+        drawText("U", topLeft + 8 + boxWidth, yOffset + 21 + boxWidth * 3, 'left', "16px touhouFont", "red");
+        drawText(" NIQUE", topLeft + 8 + boxWidth, yOffset + 21 + boxWidth * 3);
+        drawText(" GAME-SPECIFIC", topLeft + 8 + boxWidth, yOffset + 27 + boxWidth * 3);
+        drawText("LIMITATION", topLeft + 8 + boxWidth, yOffset + 33 + boxWidth * 3);
+        yOffset = 10 * boxWidth + 6;
+        drawText("METADATA", topLeft + 5, yOffset + 6);
+        drawText("1234567890", topLeft + 5, yOffset + 14);
+        drawText("QWERTYUIOP", topLeft + 5, yOffset + 20);
+        drawText("ASDFGHJKL", topLeft + 5, yOffset + 26);
+        drawText("ZXCVBNM", topLeft + 5, yOffset + 32);
+        drawText("CREATE YOUR CHART AT", topLeft + 5, yOffset + 48);
+        drawText("TINYURL.COM/TJ9829WC", topLeft + 5, yOffset + 54);
+        drawText("FONT SIZE 5 PIXELS", topLeft + 5, yOffset + 70);
     }
 }
 function drawScreen() {
@@ -876,7 +926,9 @@ function drawScreen() {
     }
     const yOffset = boxWidth;
     drawText("1CC CHART", 2, 6);
-    drawLegend();
+    if (showLegend) {
+        drawLegend();
+    }
     drawGame(htrp, 2, yOffset + boxWidth, true);
     drawGame(soew, lastX + boxWidth, yOffset);
     drawGame(podd, lastX + boxWidth, yOffset + boxWidth);
@@ -910,7 +962,6 @@ function drawScreen() {
         drawGame(aocf, lastX + boxWidth, yOffset + 33 * boxWidth);
     }
     drawHighlight();
-    drawText("MAKE YOUR OWN AT TINYURL.COM/TJ9829WC", 798, canvas.height - 10, 'right');
 }
 let state = new Map();
 function getBoxFromState(box) {
