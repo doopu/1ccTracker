@@ -551,9 +551,29 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
     // Draw difficulties?
     if (drawDifficulties)
     {
+	let difficulties = game.difficulties;
+	if (game.name === 'IN') {
+	    // IN has an A/B split, so do this custom-style.
+	    difficulties = 'XLHNLHN'.split('');
+	    if (ctx) {
+		ctx.lineWidth = 1.0;
+		ctx.beginPath();
+		ctx.lineTo(baseX - 3.5, baseY + (boxWidth));
+		ctx.lineTo(baseX + 15, baseY + (boxWidth));
+		ctx.stroke();
+		drawText("B", baseX - 2, baseY + (boxWidth) + 7);
+
+		ctx.beginPath();
+		ctx.lineTo(baseX - 3.5, baseY + (4 * boxWidth));
+		ctx.lineTo(baseX + 15, baseY + (4 * boxWidth));
+		ctx.stroke();
+		drawText("A", baseX - 2, baseY + (4 * boxWidth) + 7);
+
+	    }
+	}
 	let y = 1;
-	for (let difficulty of game.difficulties) {
-	    drawText(difficulty, baseX + 11, baseY + (y * boxWidth), 'right');
+	for (let difficulty of difficulties) {
+	    drawText(difficulty, baseX + 11, baseY + (y * boxWidth) - 1, 'right');
 	    y += 1;
 	}
 	baseX += 14;
