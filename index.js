@@ -180,18 +180,42 @@ function drawBoxContents(x, y, boxName, colour) {
         }
         ctx.fillRect(x, y, boxWidth, boxWidth);
         // Draw the little bits and pieces
-        drawText("0", x + 2, y + 7, 'left', "16px touhouFontMini");
-        drawText("0", x + 7, y + 7, 'left', "16px touhouFontMini");
-        drawText("9", x + 16, y + 7, 'right', "16px touhouFontMini");
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = 'black';
-        ctx.beginPath();
-        ctx.lineTo(x + 1.5, y + boxWidth / 2 - 0.5);
-        ctx.lineTo(x + boxWidth - 2.5, y + boxWidth / 2 - 0.5);
-        ctx.stroke();
-        drawText("F", x + 2, y + 15, 'left', "16px touhouFontMini");
-        drawText("P", x + 7, y + 15, 'left', "16px touhouFontMini");
-        drawText("U", x + 12, y + 15, 'left', "16px touhouFontMini");
+        // Draw miss/bomb/starting counts
+        if (box.misses) {
+            drawText(box.misses, x + 2, y + 7, 'left', "16px touhouFontMini");
+        }
+        if (box.bombs) {
+            drawText(box.bombs, x + 7, y + 7, 'left', "16px touhouFontMini");
+        }
+        if (box.lives) {
+            drawText(box.lives, x + 16, y + 7, 'right', "16px touhouFontMini");
+        }
+        // No vertical?
+        if (box.vertical) {
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'black';
+            ctx.beginPath();
+            ctx.lineTo(x + 1.5, y + boxWidth / 2 - 0.5);
+            ctx.lineTo(x + boxWidth - 2.5, y + boxWidth / 2 - 0.5);
+            ctx.stroke();
+        }
+        // No focus / pacifist / unique
+        if (box.focus) {
+            drawText("F", x + 2, y + 15, 'left', "16px touhouFontMini");
+        }
+        if (box.pacifist) {
+            drawText("P", x + 7, y + 15, 'left', "16px touhouFontMini");
+        }
+        if (box.unique) {
+            drawText("U", x + 12, y + 15, 'left', "16px touhouFontMini");
+        }
+        // Bug abuse? It doesn't render nice and I don't care for it anyway.
+        // ctx.lineWidth = 1;
+        // ctx.strokeStyle = 'black';
+        // ctx.beginPath();
+        // ctx.lineTo(x + 2, y + 2);
+        // ctx.lineTo(x + boxWidth - 2, y + boxWidth - 2);
+        // ctx.stroke();
     }
 }
 class Character {
@@ -204,6 +228,13 @@ class BoxObject {
     constructor(name) {
         this.name = name;
         this.done = false;
+        this.pacifist = false;
+        this.unique = false;
+        this.focus = false;
+        this.vertical = false;
+        this.lives = null;
+        this.bombs = null;
+        this.misses = null;
     }
 }
 class Game {
@@ -587,6 +618,20 @@ let selectedBox = null;
 function setupControls() {
     const doneCheckbox = document.getElementById('doneCheckbox');
     doneCheckbox.addEventListener('change', updateDoneStatus);
+    const pacifistCheckbox = document.getElementById('pacifistCheckbox');
+    pacifistCheckbox.addEventListener('change', updatePacifistStatus);
+    const focusCheckbox = document.getElementById('focusCheckbox');
+    focusCheckbox.addEventListener('change', updateFocusStatus);
+    const uniqueCheckbox = document.getElementById('uniqueCheckbox');
+    uniqueCheckbox.addEventListener('change', updateUniqueStatus);
+    const verticalCheckbox = document.getElementById('verticalCheckbox');
+    verticalCheckbox.addEventListener('change', updateVerticalStatus);
+    const livesSelect = document.getElementById('livesSelect');
+    livesSelect.addEventListener('change', updateLives);
+    const bombsSelect = document.getElementById('bombsSelect');
+    bombsSelect.addEventListener('change', updateBombs);
+    const missesSelect = document.getElementById('missesSelect');
+    missesSelect.addEventListener('change', updateMisses);
     const bgCheckbox = document.getElementById('useBackgroundCheckbox');
     bgCheckbox.addEventListener('change', updateBgStatus);
     const fightingCheckbox = document.getElementById('fightingCheckbox');
@@ -605,6 +650,62 @@ function updateDoneStatus(e) {
     if (selectedBox) {
         let currentBox = getBoxFromState(selectedBox);
         currentBox.done = e.target.checked;
+        setBoxInState(currentBox);
+        drawScreen();
+    }
+}
+function updateFocusStatus(e) {
+    if (selectedBox) {
+        let currentBox = getBoxFromState(selectedBox);
+        currentBox.focus = e.target.checked;
+        setBoxInState(currentBox);
+        drawScreen();
+    }
+}
+function updatePacifistStatus(e) {
+    if (selectedBox) {
+        let currentBox = getBoxFromState(selectedBox);
+        currentBox.pacifist = e.target.checked;
+        setBoxInState(currentBox);
+        drawScreen();
+    }
+}
+function updateVerticalStatus(e) {
+    if (selectedBox) {
+        let currentBox = getBoxFromState(selectedBox);
+        currentBox.vertical = e.target.checked;
+        setBoxInState(currentBox);
+        drawScreen();
+    }
+}
+function updateUniqueStatus(e) {
+    if (selectedBox) {
+        let currentBox = getBoxFromState(selectedBox);
+        currentBox.unique = e.target.checked;
+        setBoxInState(currentBox);
+        drawScreen();
+    }
+}
+function updateLives(e) {
+    if (selectedBox) {
+        let currentBox = getBoxFromState(selectedBox);
+        currentBox.lives = e.target.value;
+        setBoxInState(currentBox);
+        drawScreen();
+    }
+}
+function updateBombs(e) {
+    if (selectedBox) {
+        let currentBox = getBoxFromState(selectedBox);
+        currentBox.bombs = e.target.value;
+        setBoxInState(currentBox);
+        drawScreen();
+    }
+}
+function updateMisses(e) {
+    if (selectedBox) {
+        let currentBox = getBoxFromState(selectedBox);
+        currentBox.misses = e.target.value;
         setBoxInState(currentBox);
         drawScreen();
     }
@@ -635,9 +736,45 @@ function selectBox(box) {
     // Enable all the buttons
     const doneCheckbox = document.getElementById('doneCheckbox');
     doneCheckbox.disabled = false;
+    const verticalCheckbox = document.getElementById('verticalCheckbox');
+    verticalCheckbox.disabled = false;
+    const pacifistCheckbox = document.getElementById('pacifistCheckbox');
+    pacifistCheckbox.disabled = false;
+    const uniqueCheckbox = document.getElementById('uniqueCheckbox');
+    uniqueCheckbox.disabled = false;
+    const focusCheckbox = document.getElementById('focusCheckbox');
+    focusCheckbox.disabled = false;
+    const livesSelect = document.getElementById('livesSelect');
+    livesSelect.disabled = false;
+    const missesSelect = document.getElementById('missesSelect');
+    missesSelect.disabled = false;
+    const bombsSelect = document.getElementById('bombsSelect');
+    bombsSelect.disabled = false;
     // Set their state according to the selected box
     const boxObject = getBoxFromState(box);
     doneCheckbox.checked = boxObject.done;
+    pacifistCheckbox.checked = boxObject.pacifist;
+    focusCheckbox.checked = boxObject.focus;
+    uniqueCheckbox.checked = boxObject.unique;
+    verticalCheckbox.checked = boxObject.vertical;
+    if (boxObject.lives) {
+        livesSelect.value = boxObject.lives;
+    }
+    else {
+        livesSelect.value = "";
+    }
+    if (boxObject.misses) {
+        missesSelect.value = boxObject.misses;
+    }
+    else {
+        missesSelect.value = "";
+    }
+    if (boxObject.bombs) {
+        bombsSelect.value = boxObject.bombs;
+    }
+    else {
+        bombsSelect.value = "";
+    }
 }
 function deselectBox() {
     selectedBox = null;
@@ -645,6 +782,15 @@ function deselectBox() {
     const doneCheckbox = document.getElementById('doneCheckbox');
     doneCheckbox.disabled = true;
     doneCheckbox.checked = false;
+    const livesSelect = document.getElementById('livesSelect');
+    livesSelect.disabled = true;
+    livesSelect.value = "";
+    const missesSelect = document.getElementById('missesSelect');
+    missesSelect.disabled = true;
+    missesSelect.value = "";
+    const bombsSelect = document.getElementById('bombsSelect');
+    bombsSelect.disabled = true;
+    bombsSelect.value = "";
 }
 function drawHighlight() {
     if (selectedBox) {
@@ -667,7 +813,7 @@ function drawScreen() {
         }
     }
     const yOffset = boxWidth;
-    drawText("1CC CHART", 2, 10);
+    drawText("1CC CHART", 2, 5);
     drawGame(htrp, 2, yOffset + boxWidth, true);
     drawGame(soew, lastX + boxWidth, yOffset);
     drawGame(podd, lastX + boxWidth, yOffset + boxWidth);
@@ -700,8 +846,8 @@ function drawScreen() {
         drawGame(aocf, lastX + boxWidth, yOffset + 33 * boxWidth);
     }
     drawHighlight();
-    drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 798, 10, 'right');
-    drawText("MAKE YOUR OWN AT TINYURL.COM/TJ9829WC", 798, 18, 'right');
+    drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 798, canvas.height - 10, 'right');
+    drawText("MAKE YOUR OWN AT TINYURL.COM/TJ9829WC", 798, canvas.height - 18, 'right');
 }
 let state = new Map();
 function getBoxFromState(box) {

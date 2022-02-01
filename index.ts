@@ -215,21 +215,46 @@ function drawBoxContents(x: number, y: number, boxName: string, colour: string) 
 	ctx.fillRect(x, y, boxWidth, boxWidth);
 
 	// Draw the little bits and pieces
-	drawText("0", x + 2, y + 7, 'left', "16px touhouFontMini");
-	drawText("0", x + 7, y + 7, 'left', "16px touhouFontMini");
-	drawText("9", x + 16, y + 7, 'right', "16px touhouFontMini");
+	// Draw miss/bomb/starting counts
+	if (box.misses) {
+	    drawText(box.misses, x + 2, y + 7, 'left', "16px touhouFontMini");
+	}
+	if (box.bombs) {
+	    drawText(box.bombs, x + 7, y + 7, 'left', "16px touhouFontMini");
+	}
+	if (box.lives) {
+	    drawText(box.lives, x + 16, y + 7, 'right', "16px touhouFontMini");
+	}
 
-	ctx.lineWidth = 1;
-	ctx.strokeStyle = 'black';
-	ctx.beginPath();
-	ctx.lineTo(x + 1.5, y + boxWidth / 2 - 0.5);
-	ctx.lineTo(x + boxWidth - 2.5, y + boxWidth / 2 - 0.5);
-	ctx.stroke();
+	// No vertical?
+	if (box.vertical) {
+	    ctx.lineWidth = 1;
+	    ctx.strokeStyle = 'black';
+	    ctx.beginPath();
+	    ctx.lineTo(x + 1.5, y + boxWidth / 2 - 0.5);
+	    ctx.lineTo(x + boxWidth - 2.5, y + boxWidth / 2 - 0.5);
+	    ctx.stroke();
+	}
 
+	// No focus / pacifist / unique
+	if (box.focus) {
+	    drawText("F", x + 2, y + 15, 'left', "16px touhouFontMini");
+	}
+	if (box.pacifist) {
+	    drawText("P", x + 7, y + 15, 'left', "16px touhouFontMini");
+	}
+	if (box.unique) {
+	    drawText("U", x + 12, y + 15, 'left', "16px touhouFontMini");
+	}
 
-	drawText("F", x + 2, y + 15, 'left', "16px touhouFontMini");
-	drawText("P", x + 7, y + 15, 'left', "16px touhouFontMini");
-	drawText("U", x + 12, y + 15, 'left', "16px touhouFontMini");
+	// Bug abuse? It doesn't render nice and I don't care for it anyway.
+	// ctx.lineWidth = 1;
+	// ctx.strokeStyle = 'black';
+	// ctx.beginPath();
+	// ctx.lineTo(x + 2, y + 2);
+	// ctx.lineTo(x + boxWidth - 2, y + boxWidth - 2);
+	// ctx.stroke();
+
     }
 }
 
@@ -247,10 +272,24 @@ class Character {
 class BoxObject {
     name: string;
     done: boolean;
+    pacifist: boolean;
+    unique: boolean;
+    focus: boolean;
+    vertical: boolean;
+    lives: string | null;
+    bombs: string | null;
+    misses: string | null;
 
     constructor(name: string) {
 	this.name = name;
 	this.done = false;
+	this.pacifist = false;
+	this.unique = false;
+	this.focus = false;
+	this.vertical = false;
+	this.lives = null;
+	this.bombs = null;
+	this.misses = null;
     }
 }
 
@@ -696,6 +735,21 @@ let selectedBox : [Path2D, string] | null = null;
 function setupControls() {
     const doneCheckbox: HTMLInputElement | null = document.getElementById('doneCheckbox') as HTMLInputElement;
     doneCheckbox.addEventListener('change', updateDoneStatus);
+    const pacifistCheckbox: HTMLInputElement | null = document.getElementById('pacifistCheckbox') as HTMLInputElement;
+    pacifistCheckbox.addEventListener('change', updatePacifistStatus);
+    const focusCheckbox: HTMLInputElement | null = document.getElementById('focusCheckbox') as HTMLInputElement;
+    focusCheckbox.addEventListener('change', updateFocusStatus);
+    const uniqueCheckbox: HTMLInputElement | null = document.getElementById('uniqueCheckbox') as HTMLInputElement;
+    uniqueCheckbox.addEventListener('change', updateUniqueStatus);
+    const verticalCheckbox: HTMLInputElement | null = document.getElementById('verticalCheckbox') as HTMLInputElement;
+    verticalCheckbox.addEventListener('change', updateVerticalStatus);
+
+    const livesSelect: HTMLSelectElement | null = document.getElementById('livesSelect') as HTMLSelectElement;
+    livesSelect.addEventListener('change', updateLives);
+    const bombsSelect: HTMLSelectElement | null = document.getElementById('bombsSelect') as HTMLSelectElement;
+    bombsSelect.addEventListener('change', updateBombs);
+    const missesSelect: HTMLSelectElement | null = document.getElementById('missesSelect') as HTMLSelectElement;
+    missesSelect.addEventListener('change', updateMisses);
 
     const bgCheckbox: HTMLInputElement | null = document.getElementById('useBackgroundCheckbox') as HTMLInputElement;
     bgCheckbox.addEventListener('change', updateBgStatus);
@@ -719,6 +773,69 @@ function updateDoneStatus(e: Event) {
     if (selectedBox) {
 	let currentBox = getBoxFromState(selectedBox);
 	currentBox.done = (e.target! as HTMLInputElement).checked;
+	setBoxInState(currentBox);
+	drawScreen();
+    }
+}
+
+function updateFocusStatus(e: Event) {
+    if (selectedBox) {
+	let currentBox = getBoxFromState(selectedBox);
+	currentBox.focus = (e.target! as HTMLInputElement).checked;
+	setBoxInState(currentBox);
+	drawScreen();
+    }
+}
+
+function updatePacifistStatus(e: Event) {
+    if (selectedBox) {
+	let currentBox = getBoxFromState(selectedBox);
+	currentBox.pacifist = (e.target! as HTMLInputElement).checked;
+	setBoxInState(currentBox);
+	drawScreen();
+    }
+}
+
+function updateVerticalStatus(e: Event) {
+    if (selectedBox) {
+	let currentBox = getBoxFromState(selectedBox);
+	currentBox.vertical = (e.target! as HTMLInputElement).checked;
+	setBoxInState(currentBox);
+	drawScreen();
+    }
+}
+
+function updateUniqueStatus(e: Event) {
+    if (selectedBox) {
+	let currentBox = getBoxFromState(selectedBox);
+	currentBox.unique = (e.target! as HTMLInputElement).checked;
+	setBoxInState(currentBox);
+	drawScreen();
+    }
+}
+
+function updateLives(e: Event) {
+    if (selectedBox) {
+	let currentBox = getBoxFromState(selectedBox);
+	currentBox.lives = (e.target! as HTMLSelectElement).value;
+	setBoxInState(currentBox);
+	drawScreen();
+    }
+}
+
+function updateBombs(e: Event) {
+    if (selectedBox) {
+	let currentBox = getBoxFromState(selectedBox);
+	currentBox.bombs = (e.target! as HTMLSelectElement).value;
+	setBoxInState(currentBox);
+	drawScreen();
+    }
+}
+
+function updateMisses(e: Event) {
+    if (selectedBox) {
+	let currentBox = getBoxFromState(selectedBox);
+	currentBox.misses = (e.target! as HTMLSelectElement).value;
 	setBoxInState(currentBox);
 	drawScreen();
     }
@@ -752,10 +869,44 @@ function selectBox(box : [Path2D, string]) {
     // Enable all the buttons
     const doneCheckbox: HTMLInputElement | null = document.getElementById('doneCheckbox') as HTMLInputElement;
     doneCheckbox.disabled = false;
+    const verticalCheckbox: HTMLInputElement | null = document.getElementById('verticalCheckbox') as HTMLInputElement;
+    verticalCheckbox.disabled = false;
+    const pacifistCheckbox: HTMLInputElement | null = document.getElementById('pacifistCheckbox') as HTMLInputElement;
+    pacifistCheckbox.disabled = false;
+    const uniqueCheckbox: HTMLInputElement | null = document.getElementById('uniqueCheckbox') as HTMLInputElement;
+    uniqueCheckbox.disabled = false;
+    const focusCheckbox: HTMLInputElement | null = document.getElementById('focusCheckbox') as HTMLInputElement;
+    focusCheckbox.disabled = false;
+
+    const livesSelect: HTMLSelectElement | null = document.getElementById('livesSelect') as HTMLSelectElement;
+    livesSelect.disabled = false;
+    const missesSelect: HTMLSelectElement | null = document.getElementById('missesSelect') as HTMLSelectElement;
+    missesSelect.disabled = false;
+    const bombsSelect: HTMLSelectElement | null = document.getElementById('bombsSelect') as HTMLSelectElement;
+    bombsSelect.disabled = false;
 
     // Set their state according to the selected box
     const boxObject = getBoxFromState(box);
     doneCheckbox.checked = boxObject.done;
+    pacifistCheckbox.checked = boxObject.pacifist;
+    focusCheckbox.checked = boxObject.focus;
+    uniqueCheckbox.checked = boxObject.unique;
+    verticalCheckbox.checked = boxObject.vertical;
+    if (boxObject.lives) {
+	livesSelect.value = boxObject.lives;
+    } else {
+	livesSelect.value = "";
+    }
+    if (boxObject.misses) {
+	missesSelect.value = boxObject.misses;
+    } else {
+	missesSelect.value = "";
+    }
+    if (boxObject.bombs) {
+	bombsSelect.value = boxObject.bombs;
+    } else {
+	bombsSelect.value = "";
+    }
 }
 
 function deselectBox() {
@@ -764,6 +915,17 @@ function deselectBox() {
     const doneCheckbox: HTMLInputElement | null = document.getElementById('doneCheckbox') as HTMLInputElement;
     doneCheckbox.disabled = true;
     doneCheckbox.checked = false;
+
+    const livesSelect: HTMLSelectElement | null = document.getElementById('livesSelect') as HTMLSelectElement;
+    livesSelect.disabled = true;
+    livesSelect.value = "";
+
+    const missesSelect: HTMLSelectElement | null = document.getElementById('missesSelect') as HTMLSelectElement;
+    missesSelect.disabled = true;
+    missesSelect.value = "";
+    const bombsSelect: HTMLSelectElement | null = document.getElementById('bombsSelect') as HTMLSelectElement;
+    bombsSelect.disabled = true;
+    bombsSelect.value = "";
 }
 
 function drawHighlight() {
@@ -788,7 +950,7 @@ function drawScreen() {
 	}
     }
     const yOffset = boxWidth;
-    drawText("1CC CHART", 2, 10);
+    drawText("1CC CHART", 2, 5);
     drawGame(htrp, 2, yOffset + boxWidth, true);
     drawGame(soew, lastX + boxWidth, yOffset);
     drawGame(podd, lastX + boxWidth, yOffset + boxWidth);
@@ -830,8 +992,8 @@ function drawScreen() {
     }
 
     drawHighlight();
-    drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 798, 10, 'right');
-    drawText("MAKE YOUR OWN AT TINYURL.COM/TJ9829WC", 798, 18, 'right');
+    drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 798, canvas.height - 10, 'right');
+    drawText("MAKE YOUR OWN AT TINYURL.COM/TJ9829WC", 798, canvas.height - 18, 'right');
 }
 
 let state : Map<string, BoxObject> = new Map();

@@ -55,7 +55,8 @@ html {
   </style>
 </head>
   <body>
-    <div style="font-family: 'touhouFont'; font-size: 32px">TOUHOU 1CC TRACKER</div><br/>
+    <div style="font-family: 'touhouFont'; font-size: 32px">TOUHOU 1CC TRACKER</div>
+    <div style="font-family: 'touhouFontMini'; font-size: 16px">1.0</div><br/>
     <div id="container2" class="flex">
     </div>
     <hr>
@@ -73,7 +74,64 @@ html {
     <hr>
 	  <div id="debug">(Double-)Click a square!</div>
 	  <input type="checkbox" id="doneCheckbox" disabled>
-	  <label for="doneCheckbox">Done?</label>
+	  <label for="doneCheckbox">Fill with default colour?</label>
+	  <input type="checkbox" id="verticalCheckbox" disabled>
+	  <label for="verticalCheckbox">No Vertical?</label>
+	  <input type="checkbox" id="focusCheckbox" disabled>
+	  <label for="focusCheckbox">No Focus?</label>
+	  <input type="checkbox" id="pacifistCheckbox" disabled>
+	  <label for="pacifistCheckbox">Pacifist?</label>
+	  <input type="checkbox" id="uniqueCheckbox" disabled>
+	  <label for="uniqueCheckbox">Unique limitation?</label>
+	  <br/>
+	  <label for="livesSelect">Starting lives:</label>
+	  <select name="lives" id="livesSelect" disabled>
+	    <option value=""></option>
+	    <option value="1">1</option>
+	    <option value="2">2</option>
+	    <option value="3">3</option>
+	    <option value="4">4</option>
+	    <option value="5">5</option>
+	    <option value="6">6</option>
+	    <option value="7">7</option>
+	    <option value="8">8</option>
+	    <option value="9">9</option>
+	  </select>
+	  <br/>
+	  <label for="missesSelect">Misses:</label>
+	  <select name="misses" id="missesSelect" disabled>
+	    <option value=""></option>
+	    <option value="1">1</option>
+	    <option value="2">2</option>
+	    <option value="3">3</option>
+	    <option value="4">4</option>
+	    <option value="5">5</option>
+	    <option value="6">6</option>
+	    <option value="7">7</option>
+	    <option value="8">8</option>
+	    <option value="9">9</option>
+	  </select>
+	  <br/>
+	  <label for="bombsSelect">Bombs used:</label>
+	  <select name="bombs" id="bombsSelect" disabled>
+	    <option value=""></option>
+	    <option value="1">1</option>
+	    <option value="2">2</option>
+	    <option value="3">3</option>
+	    <option value="4">4</option>
+	    <option value="5">5</option>
+	    <option value="6">6</option>
+	    <option value="7">7</option>
+	    <option value="8">8</option>
+	    <option value="9">9</option>
+	  </select>
+	  <br/>
+	  <input type="color" id="bgColour" value="#ffffff" disabled>
+	  <label for="bgColour">Cell fill colour?</label>
+	  <br/>
+	  <input type="color" id="textColour" disabled>
+	  <label for="bgColour">Text colour?</label>
+
 	  <hr>
 	  <div>
 	    <a id="download" download="progress.png" href="">Download</a> your progress as a shareable image!
