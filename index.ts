@@ -781,5 +781,9 @@ function loadState() {
 font.load().then(function() {
     loadState();
     setupControls();
+    if (ctx) {
+	// Voodoo...
+	ctx.translate(0.5, 0.5);
+    }
     drawScreen();
 });
