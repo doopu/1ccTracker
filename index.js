@@ -355,7 +355,7 @@ const aocf = new Game("AOCF", "rgba(201, 143, 255, 1.0)", "LHN".split(''), [new 
 let lastX = 0;
 let lastY = 0;
 function drawText(text, x, y, align = 'left', font = "16px touhouFont") {
-    x += 0.5; // Dumb hack for Windows
+    x -= 0.5; // Dumb hack for Windows
     if (ctx) {
         ctx.font = font;
         ctx.textAlign = align;
