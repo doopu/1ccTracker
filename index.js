@@ -169,54 +169,50 @@ function drawHSIFSBox(x, y) {
         ctx.stroke();
     }
 }
-function drawBoxContents(x, y, boxName, colour) {
-    const box = getBoxFromState([new Path2D(), boxName]);
+function drawBoxContentsAux(x, y, done, misses, bombs, lives, vertical, focus, pacifist, unique, cellColour, textColour, colour) {
     if (ctx) {
-        if (box.done) {
+        if (done) {
             ctx.fillStyle = colour;
         }
         else {
-            ctx.fillStyle = box.cellColour;
+            ctx.fillStyle = cellColour;
         }
         ctx.fillRect(x, y, boxWidth, boxWidth);
         // Draw the little bits and pieces
         // Draw miss/bomb/starting counts
-        if (box.misses) {
-            drawText(box.misses, x + 2, y + 7, 'left', "16px touhouFontMini", box.textColour);
+        if (misses) {
+            drawText(misses, x + 2, y + 7, 'left', "16px touhouFontMini", textColour);
         }
-        if (box.bombs) {
-            drawText(box.bombs, x + 7, y + 7, 'left', "16px touhouFontMini", box.textColour);
+        if (bombs) {
+            drawText(bombs, x + 7, y + 7, 'left', "16px touhouFontMini", textColour);
         }
-        if (box.lives) {
-            drawText(box.lives, x + 16, y + 7, 'right', "16px touhouFontMini", box.textColour);
+        if (lives) {
+            drawText(lives, x + 16, y + 7, 'right', "16px touhouFontMini", textColour);
         }
         // No vertical?
-        if (box.vertical) {
+        if (vertical) {
             ctx.lineWidth = 1;
-            ctx.strokeStyle = box.textColour;
+            ctx.strokeStyle = textColour;
             ctx.beginPath();
             ctx.lineTo(x + 1.5, y + boxWidth / 2 - 0.5);
             ctx.lineTo(x + boxWidth - 2.5, y + boxWidth / 2 - 0.5);
             ctx.stroke();
         }
         // No focus / pacifist / unique
-        if (box.focus) {
-            drawText("F", x + 2, y + 15, 'left', "16px touhouFontMini", box.textColour);
+        if (focus) {
+            drawText("F", x + 2, y + 15, 'left', "16px touhouFontMini", textColour);
         }
-        if (box.pacifist) {
-            drawText("P", x + 7, y + 15, 'left', "16px touhouFontMini", box.textColour);
+        if (pacifist) {
+            drawText("P", x + 7, y + 15, 'left', "16px touhouFontMini", textColour);
         }
-        if (box.unique) {
-            drawText("U", x + 12, y + 15, 'left', "16px touhouFontMini", box.textColour);
+        if (unique) {
+            drawText("U", x + 12, y + 15, 'left', "16px touhouFontMini", textColour);
         }
-        // Bug abuse? It doesn't render nice and I don't care for it anyway.
-        // ctx.lineWidth = 1;
-        // ctx.strokeStyle = 'black';
-        // ctx.beginPath();
-        // ctx.lineTo(x + 2, y + 2);
-        // ctx.lineTo(x + boxWidth - 2, y + boxWidth - 2);
-        // ctx.stroke();
     }
+}
+function drawBoxContents(x, y, boxName, colour) {
+    const box = getBoxFromState([new Path2D(), boxName]);
+    drawBoxContentsAux(x, y, box.done, box.misses, box.bombs, box.lives, box.vertical, box.focus, box.pacifist, box.unique, box.cellColour, box.textColour, colour);
 }
 class Character {
     constructor(name, subcharacters = []) {
@@ -866,20 +862,36 @@ function drawLegend() {
         drawBox(canvas.width - 8 * boxWidth + 2.5, -2.5, 8 * boxWidth, 10 * boxWidth + 6, 2.0);
         drawText("LEGEND", topLeft + 5, 8);
         let yOffset = 0;
+        drawBoxContentsAux(topLeft + 6, 15, false, "0", null, null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 6 + boxWidth, 15, false, "1", null, null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 6 + boxWidth * 2, 15, false, "2", null, null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 6 + boxWidth * 3, 15, false, "3", null, null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
         drawBox(topLeft + 5, 14 + 0.5, 4 * boxWidth, boxWidth, 2.0);
         drawBox(topLeft + 5.5, 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 2 * boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 3 * boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawText("ETC", topLeft + 10 + 4 * boxWidth, 22);
         drawText("MISS COUNT", topLeft + 5, 8 + boxWidth * 2 - 3);
         yOffset = boxWidth * 2 - 6;
+        drawBoxContentsAux(topLeft + 6, yOffset + 15, false, null, "0", null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 6 + boxWidth, yOffset + 15, false, null, "1", null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 6 + boxWidth * 2, yOffset + 15, false, null, "2", null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 6 + boxWidth * 3, yOffset + 15, false, null, "3", null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
         drawBox(topLeft + 5, yOffset + 14 + 0.5, 4 * boxWidth, boxWidth, 2.0);
         drawBox(topLeft + 5.5, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 2 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 3 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawText("ETC", topLeft + 10 + 4 * boxWidth, yOffset + 22);
         drawText("BOMB COUNT", topLeft + 5, yOffset + 8 + boxWidth * 2 - 3);
         yOffset = boxWidth * 4 - 12;
+        drawBoxContentsAux(topLeft + 6, yOffset + 15, false, null, null, "7", false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 6 + boxWidth, yOffset + 15, false, null, null, "6", false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 6 + boxWidth * 2, yOffset + 15, false, null, null, "5", false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 6 + boxWidth * 3, yOffset + 15, false, null, null, "4", false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 6 + boxWidth * 4, yOffset + 15, false, null, null, "2", false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 6 + boxWidth * 5, yOffset + 15, false, null, null, "1", false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
         drawBox(topLeft + 5, yOffset + 14 + 0.5, 6 * boxWidth, boxWidth, 2.0);
         drawBox(topLeft + 5.5, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
@@ -889,6 +901,10 @@ function drawLegend() {
         drawBox(topLeft + 5.5 + 5 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawText("STARTING LIVES", topLeft + 5, yOffset + 8 + boxWidth * 2 - 3);
         yOffset = boxWidth * 6 - 18;
+        drawBoxContentsAux(topLeft + 5.5, yOffset + 14, false, null, null, null, true, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 5.5, yOffset + 14 + boxWidth, false, null, null, null, false, true, false, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 5.5, yOffset + 14 + boxWidth * 2, false, null, null, null, false, false, true, false, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBoxContentsAux(topLeft + 5.5, yOffset + 14 + boxWidth * 3, false, null, null, null, false, false, false, true, "#FFFFFF", "#000000", "#FFFFFF");
         drawBox(topLeft + 5, yOffset + 14 + 0.5, boxWidth, boxWidth * 4, 2.0);
         drawBox(topLeft + 5, yOffset + 14, boxWidth, boxWidth, 1.0);
         drawText("NO", topLeft + 8 + boxWidth, yOffset + 22);
@@ -910,6 +926,12 @@ function drawLegend() {
         drawText("QWERTYUIOP", topLeft + 5, yOffset + 20);
         drawText("ASDFGHJKL", topLeft + 5, yOffset + 26);
         drawText("ZXCVBNM", topLeft + 5, yOffset + 32);
+        drawText("18", topLeft + 10.5 + boxWidth * 4, yOffset + 13, 'left', "16px touhouFontMini");
+        drawText("1", topLeft + 24.5 + boxWidth * 4, yOffset + 13 + boxWidth / 2, 'left', "16px touhouFontMini");
+        drawText("8", topLeft + 24.5 + boxWidth * 4, yOffset + 13 + boxWidth / 2 + 6, 'left', "16px touhouFontMini");
+        drawBox(topLeft + 5.5 + boxWidth * 4, yOffset + 14, boxWidth, boxWidth, 1.0);
+        drawBoxContentsAux(topLeft + 5.5 + boxWidth * 6, yOffset + 14, false, "0", "0", "1", true, true, true, true, "#FFFFFF", "#000000", "#FFFFFF");
+        drawBox(topLeft + 5.5 + boxWidth * 6, yOffset + 14, boxWidth, boxWidth, 1.0);
         drawText("CREATE YOUR CHART AT", topLeft + 5, yOffset + 48);
         drawText("TINYURL.COM/TJ9829WC", topLeft + 5, yOffset + 54);
         drawText("FONT SIZE 5 PIXELS", topLeft + 5, yOffset + 70);
