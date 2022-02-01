@@ -855,12 +855,13 @@ function drawHighlight() {
 }
 function drawLegend() {
     const topLeft = canvas.width - 8 * boxWidth + 2.5;
+    const textOffset = topLeft - 0.5;
     if (ctx) {
         ctx.fillStyle = 'white';
         ctx.fillRect(topLeft, -2.5, 8 * boxWidth, 15 * boxWidth);
         drawBox(canvas.width - 8 * boxWidth + 2.5, -2.5, 8 * boxWidth, 15 * boxWidth, 2.0);
         drawBox(canvas.width - 8 * boxWidth + 2.5, -2.5, 8 * boxWidth, 10 * boxWidth + 6, 2.0);
-        drawText("LEGEND", topLeft + 5, 8);
+        drawText("LEGEND", textOffset + 5, 8);
         let yOffset = 0;
         drawBoxContentsAux(topLeft + 6, 15, false, "0", null, null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
         drawBoxContentsAux(topLeft + 6 + boxWidth, 15, false, "1", null, null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
@@ -871,8 +872,8 @@ function drawLegend() {
         drawBox(topLeft + 5.5 + boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 2 * boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 3 * boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
-        drawText("ETC", topLeft + 10 + 4 * boxWidth, 22);
-        drawText("MISS COUNT", topLeft + 5, 8 + boxWidth * 2 - 3);
+        drawText("ETC", textOffset + 10 + 4 * boxWidth, 22);
+        drawText("MISS COUNT", textOffset + 5, 8 + boxWidth * 2 - 3);
         yOffset = boxWidth * 2 - 6;
         drawBoxContentsAux(topLeft + 6, yOffset + 15, false, null, "0", null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
         drawBoxContentsAux(topLeft + 6 + boxWidth, yOffset + 15, false, null, "1", null, false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
@@ -883,8 +884,8 @@ function drawLegend() {
         drawBox(topLeft + 5.5 + boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 2 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 3 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
-        drawText("ETC", topLeft + 10 + 4 * boxWidth, yOffset + 22);
-        drawText("BOMB COUNT", topLeft + 5, yOffset + 8 + boxWidth * 2 - 3);
+        drawText("ETC", textOffset + 10 + 4 * boxWidth, yOffset + 22);
+        drawText("BOMB COUNT", textOffset + 5, yOffset + 8 + boxWidth * 2 - 3);
         yOffset = boxWidth * 4 - 12;
         drawBoxContentsAux(topLeft + 6, yOffset + 15, false, null, null, "7", false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
         drawBoxContentsAux(topLeft + 6 + boxWidth, yOffset + 15, false, null, null, "6", false, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
@@ -899,7 +900,7 @@ function drawLegend() {
         drawBox(topLeft + 5.5 + 3 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 4 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
         drawBox(topLeft + 5.5 + 5 * boxWidth, yOffset + 14 + 0.5, boxWidth, boxWidth, 1.0);
-        drawText("STARTING LIVES", topLeft + 5, yOffset + 8 + boxWidth * 2 - 3);
+        drawText("STARTING LIVES", textOffset + 5, yOffset + 8 + boxWidth * 2 - 3);
         yOffset = boxWidth * 6 - 18;
         drawBoxContentsAux(topLeft + 5.5, yOffset + 14, false, null, null, null, true, false, false, false, "#FFFFFF", "#000000", "#FFFFFF");
         drawBoxContentsAux(topLeft + 5.5, yOffset + 14 + boxWidth, false, null, null, null, false, true, false, false, "#FFFFFF", "#000000", "#FFFFFF");
@@ -907,34 +908,34 @@ function drawLegend() {
         drawBoxContentsAux(topLeft + 5.5, yOffset + 14 + boxWidth * 3, false, null, null, null, false, false, false, true, "#FFFFFF", "#000000", "#FFFFFF");
         drawBox(topLeft + 5, yOffset + 14 + 0.5, boxWidth, boxWidth * 4, 2.0);
         drawBox(topLeft + 5, yOffset + 14, boxWidth, boxWidth, 1.0);
-        drawText("NO", topLeft + 8 + boxWidth, yOffset + 22);
-        drawText("VERTICAL", topLeft + 8 + boxWidth, yOffset + 28);
+        drawText("NO", textOffset + 8 + boxWidth, yOffset + 22);
+        drawText("VERTICAL", textOffset + 8 + boxWidth, yOffset + 28);
         drawBox(topLeft + 5, boxWidth + yOffset + 14, boxWidth, boxWidth, 1.0);
-        drawText("F", topLeft + 26 + boxWidth, yOffset + 21 + boxWidth, 'left', "16px touhouFont", "red");
-        drawText("NO  OCUS", topLeft + 8 + boxWidth, yOffset + 21 + boxWidth);
+        drawText("F", textOffset + 26 + boxWidth, yOffset + 21 + boxWidth, 'left', "16px touhouFont", "red");
+        drawText("NO  OCUS", textOffset + 8 + boxWidth, yOffset + 21 + boxWidth);
         drawBox(topLeft + 5, 2 * boxWidth + yOffset + 14, boxWidth, boxWidth, 1.0);
-        drawText("P", topLeft + 8 + boxWidth, yOffset + 21 + boxWidth * 2, 'left', "16px touhouFont", "red");
-        drawText(" ACIFIST", topLeft + 8 + boxWidth, yOffset + 21 + boxWidth * 2);
+        drawText("P", textOffset + 8 + boxWidth, yOffset + 21 + boxWidth * 2, 'left', "16px touhouFont", "red");
+        drawText(" ACIFIST", textOffset + 8 + boxWidth, yOffset + 21 + boxWidth * 2);
         drawBox(topLeft + 5, 3 * boxWidth + yOffset + 14, boxWidth, boxWidth, 1.0);
-        drawText("U", topLeft + 8 + boxWidth, yOffset + 21 + boxWidth * 3, 'left', "16px touhouFont", "red");
-        drawText(" NIQUE", topLeft + 8 + boxWidth, yOffset + 21 + boxWidth * 3);
-        drawText(" GAME-SPECIFIC", topLeft + 8 + boxWidth, yOffset + 27 + boxWidth * 3);
-        drawText("LIMITATION", topLeft + 8 + boxWidth, yOffset + 33 + boxWidth * 3);
+        drawText("U", textOffset + 8 + boxWidth, yOffset + 21 + boxWidth * 3, 'left', "16px touhouFont", "red");
+        drawText(" NIQUE", textOffset + 8 + boxWidth, yOffset + 21 + boxWidth * 3);
+        drawText(" GAME-SPECIFIC", textOffset + 8 + boxWidth, yOffset + 27 + boxWidth * 3);
+        drawText("LIMITATION", textOffset + 8 + boxWidth, yOffset + 33 + boxWidth * 3);
         yOffset = 10 * boxWidth + 6;
-        drawText("METADATA", topLeft + 5, yOffset + 6);
-        drawText("1234567890", topLeft + 5, yOffset + 14);
-        drawText("QWERTYUIOP", topLeft + 5, yOffset + 20);
-        drawText("ASDFGHJKL", topLeft + 5, yOffset + 26);
-        drawText("ZXCVBNM", topLeft + 5, yOffset + 32);
+        drawText("METADATA", textOffset + 5, yOffset + 6);
+        drawText("1234567890", textOffset + 5, yOffset + 14);
+        drawText("QWERTYUIOP", textOffset + 5, yOffset + 20);
+        drawText("ASDFGHJKL", textOffset + 5, yOffset + 26);
+        drawText("ZXCVBNM", textOffset + 5, yOffset + 32);
         drawText("18", topLeft + 10.5 + boxWidth * 4, yOffset + 13, 'left', "16px touhouFontMini");
         drawText("1", topLeft + 24.5 + boxWidth * 4, yOffset + 13 + boxWidth / 2, 'left', "16px touhouFontMini");
         drawText("8", topLeft + 24.5 + boxWidth * 4, yOffset + 13 + boxWidth / 2 + 6, 'left', "16px touhouFontMini");
         drawBox(topLeft + 5.5 + boxWidth * 4, yOffset + 14, boxWidth, boxWidth, 1.0);
         drawBoxContentsAux(topLeft + 5.5 + boxWidth * 6, yOffset + 14, false, "0", "0", "1", true, true, true, true, "#FFFFFF", "#000000", "#FFFFFF");
         drawBox(topLeft + 5.5 + boxWidth * 6, yOffset + 14, boxWidth, boxWidth, 1.0);
-        drawText("CREATE YOUR CHART AT", topLeft + 5, yOffset + 48);
-        drawText("TINYURL.COM/TJ9829WC", topLeft + 5, yOffset + 54);
-        drawText("FONT SIZE 5 PIXELS", topLeft + 5, yOffset + 70);
+        drawText("CREATE YOUR CHART AT", textOffset + 5, yOffset + 48);
+        drawText("TINYURL.COM/TJ9829WC", textOffset + 5, yOffset + 54);
+        drawText("FONT SIZE 5 PIXELS", textOffset + 5, yOffset + 70);
     }
 }
 function drawScreen() {
