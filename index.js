@@ -176,7 +176,7 @@ function drawBoxContents(x, y, boxName, colour) {
             ctx.fillStyle = colour;
         }
         else {
-            ctx.fillStyle = 'white';
+            ctx.fillStyle = box.cellColour;
         }
         ctx.fillRect(x, y, boxWidth, boxWidth);
         // Draw the little bits and pieces
@@ -193,7 +193,7 @@ function drawBoxContents(x, y, boxName, colour) {
         // No vertical?
         if (box.vertical) {
             ctx.lineWidth = 1;
-            ctx.strokeStyle = 'black';
+            ctx.strokeStyle = box.textColour;
             ctx.beginPath();
             ctx.lineTo(x + 1.5, y + boxWidth / 2 - 0.5);
             ctx.lineTo(x + boxWidth - 2.5, y + boxWidth / 2 - 0.5);
@@ -227,6 +227,8 @@ class Character {
 class BoxObject {
     constructor(name) {
         this.name = name;
+        this.textColour = '#000000';
+        this.cellColour = '#FFFFFF';
         this.done = false;
         this.pacifist = false;
         this.unique = false;
@@ -267,6 +269,7 @@ const eosd = new Game("EOSD", "rgba(255, 51, 18, 1.0)", "XLHN".split(''), [new C
 const stb = new Game("STB", "rgba(99, 44, 0, 1.0)", ["85", "66"], [new Character("AY")]);
 const ds = new Game("DS", "rgba(10, 34, 119, 1.0)", ["108", "58"], [new Character("AY"), new Character("HA")]);
 const isc = new Game("ISC", "rgba(99, 44, 0, 1.0)", ["NI", "C"], [new Character("SJ")]);
+const vd = new Game("VD", "rgba(163, 73, 164, 1.0)", ["103", "C"], [new Character("SM")]);
 const pcb = new Game("PCB", "rgba(255, 127, 191, 1.0)", "PXLHN".split(''), [new Character("R", ["a", "b"]),
     new Character("M", ["a", "b"]),
     new Character("S", ["a", "b"])]);
@@ -632,6 +635,10 @@ function setupControls() {
     bombsSelect.addEventListener('change', updateBombs);
     const missesSelect = document.getElementById('missesSelect');
     missesSelect.addEventListener('change', updateMisses);
+    const cellColour = document.getElementById('bgColour');
+    cellColour.addEventListener('change', updateCellColour);
+    const textColour = document.getElementById('textColour');
+    textColour.addEventListener('change', updateTextColour);
     const bgCheckbox = document.getElementById('useBackgroundCheckbox');
     bgCheckbox.addEventListener('change', updateBgStatus);
     const fightingCheckbox = document.getElementById('fightingCheckbox');
@@ -643,6 +650,22 @@ function toggleDone() {
         currentBox.done = !currentBox.done;
         setBoxInState(currentBox);
         selectBox(selectedBox);
+        drawScreen();
+    }
+}
+function updateCellColour(e) {
+    if (selectedBox) {
+        let currentBox = getBoxFromState(selectedBox);
+        currentBox.cellColour = e.target.value;
+        setBoxInState(currentBox);
+        drawScreen();
+    }
+}
+function updateTextColour(e) {
+    if (selectedBox) {
+        let currentBox = getBoxFromState(selectedBox);
+        currentBox.textColour = e.target.value;
+        setBoxInState(currentBox);
         drawScreen();
     }
 }
@@ -750,6 +773,10 @@ function selectBox(box) {
     missesSelect.disabled = false;
     const bombsSelect = document.getElementById('bombsSelect');
     bombsSelect.disabled = false;
+    const cellColour = document.getElementById('bgColour');
+    cellColour.disabled = false;
+    const textColour = document.getElementById('textColour');
+    textColour.disabled = false;
     // Set their state according to the selected box
     const boxObject = getBoxFromState(box);
     doneCheckbox.checked = boxObject.done;
@@ -757,6 +784,8 @@ function selectBox(box) {
     focusCheckbox.checked = boxObject.focus;
     uniqueCheckbox.checked = boxObject.unique;
     verticalCheckbox.checked = boxObject.vertical;
+    cellColour.value = boxObject.cellColour;
+    textColour.value = boxObject.textColour;
     if (boxObject.lives) {
         livesSelect.value = boxObject.lives;
     }
@@ -782,6 +811,18 @@ function deselectBox() {
     const doneCheckbox = document.getElementById('doneCheckbox');
     doneCheckbox.disabled = true;
     doneCheckbox.checked = false;
+    const focusCheckbox = document.getElementById('focusCheckbox');
+    focusCheckbox.disabled = true;
+    focusCheckbox.checked = false;
+    const pacifistCheckbox = document.getElementById('pacifistCheckbox');
+    pacifistCheckbox.disabled = true;
+    pacifistCheckbox.checked = false;
+    const uniqueCheckbox = document.getElementById('uniqueCheckbox');
+    uniqueCheckbox.disabled = true;
+    uniqueCheckbox.checked = false;
+    const verticalCheckbox = document.getElementById('verticalCheckbox');
+    verticalCheckbox.disabled = true;
+    verticalCheckbox.checked = false;
     const livesSelect = document.getElementById('livesSelect');
     livesSelect.disabled = true;
     livesSelect.value = "";
@@ -791,6 +832,12 @@ function deselectBox() {
     const bombsSelect = document.getElementById('bombsSelect');
     bombsSelect.disabled = true;
     bombsSelect.value = "";
+    const cellColour = document.getElementById('bgColour');
+    cellColour.disabled = true;
+    cellColour.value = "#ffffff";
+    const textColour = document.getElementById('textColour');
+    textColour.disabled = true;
+    textColour.value = "#000000";
 }
 function drawHighlight() {
     if (selectedBox) {
@@ -803,6 +850,21 @@ function drawHighlight() {
         }
     }
 }
+function drawLegend() {
+    const topLeft = canvas.width - 8 * boxWidth + 2.5;
+    if (ctx) {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(topLeft, -2.5, 8 * boxWidth, 15 * boxWidth);
+        drawBox(canvas.width - 8 * boxWidth + 2.5, -2.5, 8 * boxWidth, 15 * boxWidth, 2.0);
+        drawText("LEGEND", topLeft + 5, 8);
+        drawBox(topLeft + 5, 14 + 0.5, 4 * boxWidth, boxWidth, 2.0);
+        drawBox(topLeft + 5.5, 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawBox(topLeft + 5.5 + boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawBox(topLeft + 5.5 + 2 * boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawBox(topLeft + 5.5 + 3 * boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
+        drawText("MISS COUNT", topLeft + 5, 8 + boxWidth * 2 - 3);
+    }
+}
 function drawScreen() {
     boxes = [];
     if (ctx) {
@@ -813,16 +875,18 @@ function drawScreen() {
         }
     }
     const yOffset = boxWidth;
-    drawText("1CC CHART", 2, 5);
+    drawText("1CC CHART", 2, 6);
+    drawLegend();
     drawGame(htrp, 2, yOffset + boxWidth, true);
     drawGame(soew, lastX + boxWidth, yOffset);
     drawGame(podd, lastX + boxWidth, yOffset + boxWidth);
     drawGame(ls, lastX + boxWidth, yOffset);
     drawGame(ms, lastX + boxWidth, yOffset);
     drawGame(eosd, lastX + boxWidth, yOffset);
-    drawGame(stb, lastX + 2 * boxWidth, yOffset + 2 * boxWidth, true);
-    drawGame(ds, lastX + 2 * boxWidth, yOffset + 2 * boxWidth, true);
-    drawGame(isc, lastX + 2 * boxWidth, yOffset + 2 * boxWidth, true);
+    drawGame(stb, lastX + 2 * boxWidth - 6, yOffset + 2 * boxWidth, true);
+    drawGame(ds, lastX + 2 * boxWidth - 4, yOffset + 2 * boxWidth, true);
+    drawGame(isc, lastX + 2 * boxWidth - 8, yOffset + 2 * boxWidth, true);
+    drawGame(vd, lastX + 2 * boxWidth, yOffset + 2 * boxWidth, true);
     drawGame(pcb, 2, yOffset + 8 * boxWidth, true);
     drawGame(imp, lastX + 2 * boxWidth, yOffset + 6 * boxWidth, true);
     drawGame(pofv, lastX + 2 * boxWidth, yOffset + 9 * boxWidth, true);
@@ -846,8 +910,7 @@ function drawScreen() {
         drawGame(aocf, lastX + boxWidth, yOffset + 33 * boxWidth);
     }
     drawHighlight();
-    drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 798, canvas.height - 10, 'right');
-    drawText("MAKE YOUR OWN AT TINYURL.COM/TJ9829WC", 798, canvas.height - 18, 'right');
+    drawText("MAKE YOUR OWN AT TINYURL.COM/TJ9829WC", 798, canvas.height - 10, 'right');
 }
 let state = new Map();
 function getBoxFromState(box) {

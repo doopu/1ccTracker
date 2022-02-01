@@ -210,7 +210,7 @@ function drawBoxContents(x: number, y: number, boxName: string, colour: string) 
 	if (box.done) {
 	    ctx.fillStyle = colour;
 	} else {
-	    ctx.fillStyle = 'white';
+	    ctx.fillStyle = box.cellColour;
 	}
 	ctx.fillRect(x, y, boxWidth, boxWidth);
 
@@ -229,7 +229,7 @@ function drawBoxContents(x: number, y: number, boxName: string, colour: string) 
 	// No vertical?
 	if (box.vertical) {
 	    ctx.lineWidth = 1;
-	    ctx.strokeStyle = 'black';
+	    ctx.strokeStyle = box.textColour;
 	    ctx.beginPath();
 	    ctx.lineTo(x + 1.5, y + boxWidth / 2 - 0.5);
 	    ctx.lineTo(x + boxWidth - 2.5, y + boxWidth / 2 - 0.5);
@@ -276,12 +276,17 @@ class BoxObject {
     unique: boolean;
     focus: boolean;
     vertical: boolean;
+    textColour: string;
+    cellColour: string;
+
     lives: string | null;
     bombs: string | null;
     misses: string | null;
 
     constructor(name: string) {
 	this.name = name;
+	this.textColour = '#000000';
+	this.cellColour = '#FFFFFF';
 	this.done = false;
 	this.pacifist = false;
 	this.unique = false;
@@ -333,6 +338,7 @@ const eosd = new Game("EOSD", "rgba(255, 51, 18, 1.0)", "XLHN".split(''), [new C
 const stb = new Game("STB", "rgba(99, 44, 0, 1.0)", ["85", "66"], [new Character("AY")]);
 const ds = new Game("DS", "rgba(10, 34, 119, 1.0)", ["108", "58"], [new Character("AY"), new Character("HA")]);
 const isc = new Game("ISC", "rgba(99, 44, 0, 1.0)", ["NI", "C"], [new Character("SJ")]);
+const vd = new Game("VD", "rgba(163, 73, 164, 1.0)", ["103", "C"], [new Character("SM")]);
 
 const pcb = new Game("PCB", "rgba(255, 127, 191, 1.0)", "PXLHN".split(''), [new Character("R", ["a", "b"]),
 							new Character("M", ["a", "b"]),
@@ -751,6 +757,11 @@ function setupControls() {
     const missesSelect: HTMLSelectElement | null = document.getElementById('missesSelect') as HTMLSelectElement;
     missesSelect.addEventListener('change', updateMisses);
 
+    const cellColour: HTMLInputElement | null = document.getElementById('bgColour') as HTMLInputElement;
+    cellColour.addEventListener('change', updateCellColour);
+    const textColour: HTMLInputElement | null = document.getElementById('textColour') as HTMLInputElement;
+    textColour.addEventListener('change', updateTextColour);
+
     const bgCheckbox: HTMLInputElement | null = document.getElementById('useBackgroundCheckbox') as HTMLInputElement;
     bgCheckbox.addEventListener('change', updateBgStatus);
 
@@ -765,6 +776,24 @@ function toggleDone()
 	currentBox.done = !currentBox.done;
 	setBoxInState(currentBox);
 	selectBox(selectedBox);
+	drawScreen();
+    }
+}
+
+function updateCellColour(e: Event) {
+    if (selectedBox) {
+	let currentBox = getBoxFromState(selectedBox);
+	currentBox.cellColour = (e.target! as HTMLInputElement).value;
+	setBoxInState(currentBox);
+	drawScreen();
+    }
+}
+
+function updateTextColour(e: Event) {
+    if (selectedBox) {
+	let currentBox = getBoxFromState(selectedBox);
+	currentBox.textColour = (e.target! as HTMLInputElement).value;
+	setBoxInState(currentBox);
 	drawScreen();
     }
 }
@@ -885,6 +914,11 @@ function selectBox(box : [Path2D, string]) {
     const bombsSelect: HTMLSelectElement | null = document.getElementById('bombsSelect') as HTMLSelectElement;
     bombsSelect.disabled = false;
 
+    const cellColour: HTMLInputElement | null = document.getElementById('bgColour') as HTMLInputElement;
+    cellColour.disabled = false;
+    const textColour: HTMLInputElement | null = document.getElementById('textColour') as HTMLInputElement;
+    textColour.disabled = false;
+
     // Set their state according to the selected box
     const boxObject = getBoxFromState(box);
     doneCheckbox.checked = boxObject.done;
@@ -892,6 +926,8 @@ function selectBox(box : [Path2D, string]) {
     focusCheckbox.checked = boxObject.focus;
     uniqueCheckbox.checked = boxObject.unique;
     verticalCheckbox.checked = boxObject.vertical;
+    cellColour.value = boxObject.cellColour;
+    textColour.value = boxObject.textColour;
     if (boxObject.lives) {
 	livesSelect.value = boxObject.lives;
     } else {
@@ -915,6 +951,18 @@ function deselectBox() {
     const doneCheckbox: HTMLInputElement | null = document.getElementById('doneCheckbox') as HTMLInputElement;
     doneCheckbox.disabled = true;
     doneCheckbox.checked = false;
+    const focusCheckbox: HTMLInputElement | null = document.getElementById('focusCheckbox') as HTMLInputElement;
+    focusCheckbox.disabled = true;
+    focusCheckbox.checked = false;
+    const pacifistCheckbox: HTMLInputElement | null = document.getElementById('pacifistCheckbox') as HTMLInputElement;
+    pacifistCheckbox.disabled = true;
+    pacifistCheckbox.checked = false;
+    const uniqueCheckbox: HTMLInputElement | null = document.getElementById('uniqueCheckbox') as HTMLInputElement;
+    uniqueCheckbox.disabled = true;
+    uniqueCheckbox.checked = false;
+    const verticalCheckbox: HTMLInputElement | null = document.getElementById('verticalCheckbox') as HTMLInputElement;
+    verticalCheckbox.disabled = true;
+    verticalCheckbox.checked = false;
 
     const livesSelect: HTMLSelectElement | null = document.getElementById('livesSelect') as HTMLSelectElement;
     livesSelect.disabled = true;
@@ -926,6 +974,14 @@ function deselectBox() {
     const bombsSelect: HTMLSelectElement | null = document.getElementById('bombsSelect') as HTMLSelectElement;
     bombsSelect.disabled = true;
     bombsSelect.value = "";
+
+    const cellColour: HTMLInputElement | null = document.getElementById('bgColour') as HTMLInputElement;
+    cellColour.disabled = true;
+    cellColour.value = "#ffffff";
+    const textColour: HTMLInputElement | null = document.getElementById('textColour') as HTMLInputElement;
+    textColour.disabled = true;
+    textColour.value = "#000000";
+
 }
 
 function drawHighlight() {
@@ -940,6 +996,23 @@ function drawHighlight() {
     }
 }
 
+function drawLegend() {
+    const topLeft = canvas.width - 8 * boxWidth + 2.5;
+    if (ctx) {
+	ctx.fillStyle = 'white';
+	ctx.fillRect(topLeft, -2.5, 8 * boxWidth, 15 * boxWidth);
+	drawBox(canvas.width - 8 * boxWidth + 2.5, -2.5, 8 * boxWidth, 15 * boxWidth, 2.0);
+	drawText("LEGEND", topLeft + 5, 8);
+
+	drawBox(topLeft + 5, 14 + 0.5, 4 * boxWidth, boxWidth, 2.0);
+	drawBox(topLeft + 5.5, 14 + 0.5, boxWidth, boxWidth, 1.0);
+	drawBox(topLeft + 5.5 + boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
+	drawBox(topLeft + 5.5 + 2 * boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
+	drawBox(topLeft + 5.5 + 3 * boxWidth, 14 + 0.5, boxWidth, boxWidth, 1.0);
+	drawText("MISS COUNT", topLeft + 5, 8 + boxWidth * 2 - 3);
+    }
+}
+
 function drawScreen() {
     boxes = [];
     if (ctx) {
@@ -950,7 +1023,8 @@ function drawScreen() {
 	}
     }
     const yOffset = boxWidth;
-    drawText("1CC CHART", 2, 5);
+    drawText("1CC CHART", 2, 6);
+    drawLegend();
     drawGame(htrp, 2, yOffset + boxWidth, true);
     drawGame(soew, lastX + boxWidth, yOffset);
     drawGame(podd, lastX + boxWidth, yOffset + boxWidth);
@@ -958,9 +1032,10 @@ function drawScreen() {
     drawGame(ms, lastX + boxWidth, yOffset);
     drawGame(eosd, lastX + boxWidth, yOffset);
 
-    drawGame(stb, lastX + 2 * boxWidth, yOffset + 2 * boxWidth, true);
-    drawGame(ds, lastX + 2 * boxWidth, yOffset + 2 * boxWidth, true);
-    drawGame(isc, lastX + 2 * boxWidth, yOffset + 2 * boxWidth, true);
+    drawGame(stb, lastX + 2 * boxWidth - 6, yOffset + 2 * boxWidth, true);
+    drawGame(ds, lastX + 2 * boxWidth - 4, yOffset + 2 * boxWidth, true);
+    drawGame(isc, lastX + 2 * boxWidth - 8, yOffset + 2 * boxWidth, true);
+    drawGame(vd, lastX + 2 * boxWidth, yOffset + 2 * boxWidth, true);
 
     drawGame(pcb, 2, yOffset + 8 * boxWidth, true);
     drawGame(imp, lastX + 2 * boxWidth, yOffset + 6 * boxWidth, true);
@@ -992,8 +1067,7 @@ function drawScreen() {
     }
 
     drawHighlight();
-    drawText("ORIGINAL TEMPLATE AUTHOR UNKNOWN", 798, canvas.height - 10, 'right');
-    drawText("MAKE YOUR OWN AT TINYURL.COM/TJ9829WC", 798, canvas.height - 18, 'right');
+    drawText("MAKE YOUR OWN AT TINYURL.COM/TJ9829WC", 798, canvas.height - 10, 'right');
 }
 
 let state : Map<string, BoxObject> = new Map();
