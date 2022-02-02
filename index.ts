@@ -1136,10 +1136,10 @@ function drawLegend() {
 function drawScreen() {
     boxes = [];
     if (ctx) {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.clearRect(-1, -1, canvas.width, canvas.height);
 	if (!transparentPng) {
 	    ctx.fillStyle = 'white';
-	    ctx.fillRect(0, 0, canvas.width, canvas.height);
+	    ctx.fillRect(-1, -1, canvas.width, canvas.height);
 	}
     }
     const yOffset = boxWidth;
