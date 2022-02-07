@@ -72,10 +72,12 @@ function drawGFWBox(x: number, y: number) : void {
 	ctx.beginPath();
 	ctx.lineTo(x, y);
 	ctx.lineTo(x + boxWidth * 6, y);
-	ctx.lineTo(x + boxWidth * 6, y + boxWidth * 2);
-	ctx.lineTo(x + boxWidth * 7, y + boxWidth * 2);
-	ctx.lineTo(x + boxWidth * 7, y + boxWidth * 3);
-	ctx.lineTo(x, y + boxWidth * 3);
+	const height = easyMode ? 4 : 3;
+	ctx.lineTo(x + boxWidth * 6, y + boxWidth * (height - 1));
+	ctx.lineTo(x + boxWidth * 7, y + boxWidth * (height - 1));
+
+	ctx.lineTo(x + boxWidth * 7, y + boxWidth * height);
+	ctx.lineTo(x, y + boxWidth * height);
 	ctx.lineTo(x, y);
 	ctx.stroke();
 
@@ -86,23 +88,23 @@ function drawGFWBox(x: number, y: number) : void {
 	x += 0.5;
 	ctx.lineWidth = 1.0;
 	ctx.beginPath();
-	ctx.lineTo(x + boxWidth * 5, y + boxWidth * 2);
-	ctx.lineTo(x + boxWidth * 6, y + boxWidth * 2);
+	ctx.lineTo(x + boxWidth * 5, y + boxWidth * (height - 1));
+	ctx.lineTo(x + boxWidth * 6, y + boxWidth * (height - 1));
 	ctx.stroke();
 
 	ctx.beginPath();
-	ctx.lineTo(x + boxWidth * 5, y + boxWidth * 2);
-	ctx.lineTo(x + boxWidth * 5, y + boxWidth * 3);
+	ctx.lineTo(x + boxWidth * 5, y + boxWidth * (height - 1));
+	ctx.lineTo(x + boxWidth * 5, y + boxWidth * height);
 	ctx.stroke();
 
 	ctx.beginPath();
-	ctx.lineTo(x + boxWidth * 6 - 1, y + boxWidth * 2);
-	ctx.lineTo(x + boxWidth * 6 - 1, y + boxWidth * 3 + 8.5);
+	ctx.lineTo(x + boxWidth * 6 - 1, y + boxWidth * (height - 1));
+	ctx.lineTo(x + boxWidth * 6 - 1, y + boxWidth * height + 8.5);
 	ctx.stroke();
 
 	ctx.beginPath();
-	ctx.lineTo(x + boxWidth * 6 + 1, y + boxWidth * 2);
-	ctx.lineTo(x + boxWidth * 6 + 1, y + boxWidth * 3 + 8.5);
+	ctx.lineTo(x + boxWidth * 6 + 1, y + boxWidth * (height - 1));
+	ctx.lineTo(x + boxWidth * 6 + 1, y + boxWidth * height + 8.5);
 	ctx.stroke();
 
 
@@ -136,10 +138,19 @@ function drawLOLKBox(x: number, y: number) : void {
 	ctx.lineTo(x + boxWidth * 7, y + boxWidth);
 	ctx.lineTo(x + boxWidth * 7, y);
 	ctx.lineTo(x + boxWidth * 8, y);
-	ctx.lineTo(x + boxWidth * 8, y + boxWidth * 4);
 
-	ctx.lineTo(x, y + boxWidth * 4);
-	ctx.lineTo(x, y + boxWidth);
+	if (!easyMode) {
+	    ctx.lineTo(x + boxWidth * 8, y + boxWidth * 4);
+
+	    ctx.lineTo(x, y + boxWidth * 4);
+	    ctx.lineTo(x, y + boxWidth);
+	}
+	if (easyMode) {
+	    ctx.lineTo(x + boxWidth * 8, y + boxWidth * 5);
+
+	    ctx.lineTo(x, y + boxWidth * 5);
+	    ctx.lineTo(x, y + boxWidth);
+	}
 
 	ctx.stroke();
     }
@@ -173,8 +184,12 @@ function drawHSIFSBox(x: number, y: number) : void {
 	ctx.lineTo(x + boxWidth * 13, y + boxWidth);
 	ctx.lineTo(x + boxWidth * 16, y + boxWidth);
 
-	ctx.lineTo(x + boxWidth * 16, y + boxWidth * 4);
-	ctx.lineTo(x, y + boxWidth * 4);
+	let height = 4;
+	if (easyMode) {
+	    height = 5;
+	}
+	ctx.lineTo(x + boxWidth * 16, y + boxWidth * height);
+	ctx.lineTo(x, y + boxWidth * height);
 	ctx.lineTo(x, y);
 
 	ctx.stroke();
@@ -200,6 +215,66 @@ function drawHSIFSBox(x: number, y: number) : void {
 	ctx.beginPath();
 	ctx.lineTo(x + 12 * boxWidth, y + boxWidth - 2);
 	ctx.lineTo(x + 13 * boxWidth, y + boxWidth - 2);
+	ctx.stroke();
+    }
+}
+
+function drawTDUMBox(x: number, y: number) : void {
+    if (ctx) {
+	ctx.lineCap = 'square';
+	ctx.lineJoin = 'miter';
+	ctx.strokeStyle = 'rgba(128, 128, 128, 1.0)';
+	ctx.lineWidth = 2.0;
+	// Do the really annoying thing of tracing around the box...
+	ctx.beginPath();
+	ctx.lineTo(x, y);
+	ctx.lineTo(x + boxWidth, y);
+	ctx.lineTo(x + boxWidth, y + boxWidth);
+	ctx.lineTo(x + boxWidth * 2, y + boxWidth);
+
+	ctx.lineTo(x + boxWidth * 2, y);
+	ctx.lineTo(x + boxWidth * 3, y);
+	ctx.lineTo(x + boxWidth * 3, y + boxWidth);
+	ctx.lineTo(x + boxWidth * 4, y + boxWidth);
+
+	ctx.lineTo(x + boxWidth * 4, y);
+	ctx.lineTo(x + boxWidth * 5, y);
+	ctx.lineTo(x + boxWidth * 5, y + boxWidth);
+	ctx.lineTo(x + boxWidth * 6, y + boxWidth);
+
+	ctx.lineTo(x + boxWidth * 6, y);
+	ctx.lineTo(x + boxWidth * 7, y);
+	ctx.lineTo(x + boxWidth * 7, y + boxWidth);
+	ctx.lineTo(x + boxWidth * 8, y + boxWidth);
+
+	const height = easyMode ? 5 : 4;
+	ctx.lineTo(x + boxWidth * 8, y + boxWidth * height);
+	ctx.lineTo(x, y + boxWidth * height);
+	ctx.lineTo(x, y);
+
+	ctx.stroke();
+
+	// Draw the X dividers
+	y += 0.5;
+	ctx.lineWidth = 1.0;
+	ctx.beginPath();
+	ctx.lineTo(x, y + boxWidth - 2);
+	ctx.lineTo(x + boxWidth, y + boxWidth - 2);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineTo(x + 2 * boxWidth, y + boxWidth - 2);
+	ctx.lineTo(x + 3 * boxWidth, y + boxWidth - 2);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineTo(x + 4 * boxWidth, y + boxWidth - 2);
+	ctx.lineTo(x + 5 * boxWidth, y + boxWidth - 2);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineTo(x + 6 * boxWidth, y + boxWidth - 2);
+	ctx.lineTo(x + 7 * boxWidth, y + boxWidth - 2);
 	ctx.stroke();
     }
 }
@@ -397,10 +472,10 @@ const gfw = new Game("GFW", "rgba(127, 253, 255, 1.0)", "LHN".split(''), [new Ch
 									  new Character("C2"),
 									  new Character("EX")]);
 
-const td = new Game("TD", "rgba(255, 191, 127, 1.0)", "XLHN".split(''), [new Character("R"),
-									  new Character("M"),
-									  new Character("SN"),
-									  new Character("Y")]);
+const td = new Game("TD", "rgba(255, 191, 127, 1.0)", "XLHN".split(''), [new Character("R", ["e1", "e2"]),
+									 new Character("M", ["e1", "e2"]),
+									 new Character("SN", ["e1", "e2"]),
+									 new Character("Y", ["e1", "e2"])]);
 
 const ddc = new Game("DDC", "rgba(123, 95, 135, 1.0)", "XLHN".split(''), [new Character("R", ["a", "b"]),
 									   new Character("M", ["a", "b"]),
@@ -420,10 +495,10 @@ const wbawc = new Game("WBAWC", "rgba(224, 66, 44, 1.0)", "XLHN".split(''), [new
 									     new Character("M", ["w", "o", "e"]),
 									     new Character("Y", ["w", "o", "e"])]);
 
-const um = new Game("UM", "rgba(0, 201, 109, 1.0)", "XLHN".split(''), [new Character("R"),
-									  new Character("M"),
-									  new Character("S"),
-									  new Character("SN")]);
+const um = new Game("UM", "rgba(0, 201, 109, 1.0)", "XLHN".split(''), [new Character("R", ["e1", "e2"]),
+								       new Character("M", ["e1", "e2"]),
+								       new Character("S", ["e1", "e2"]),
+								       new Character("SN", ["e1", "e2"])]);
 
 const iamp = new Game("IAMP", "rgba(78, 22, 86, 1.0)", "LHN".split(''), [new Character("R"),
 									 new Character("M"),
@@ -495,6 +570,13 @@ const aocf = new Game("AOCF", "rgba(201, 143, 255, 1.0)", "LHN".split(''), [new 
 									    new Character("YU"),
 									    new Character("J")]);
 
+const gi = new Game("GI", "rgba(131, 5, 5, 1.0)", "HN".split(''), [new Character("R"),
+								       new Character("M"),
+								       new Character("KA"),
+								       new Character("MU"),
+								       new Character("J"),
+								       new Character("FL", ["a", "b", "c"])]);
+
 let lastX = 0;
 let lastY = 0;
 
@@ -531,8 +613,9 @@ function drawDot(colour: string, x: number, y: number, width: number = 2) {
 let boxes : [Path2D, string][] = [];
 
 function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: boolean = false) {
+
+
     // Except for certain games, we can just draw a difficulties-by-subcharacters box grid
-    const height = game.difficulties.length;
     let width = 0;
     // Expand out the subcharacters while we're at it
     let expandedChars = [];
@@ -548,13 +631,26 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
 	}
     }
 
+    // Easy mode toggle need special work
+    let difficulties = game.difficulties.slice();
+    if (easyMode) {
+	if (game.name === 'IN') {
+	    difficulties = ["X", "B-L", "B-H", "B-N", "B-E", "A-L", "A-H", "A-N", "A-E"];
+	} else if (difficulties[difficulties.length - 1] === 'N') {
+	    difficulties.push('E');
+	}
+    }
+    const height = difficulties.length;
+
     // Draw difficulties?
     if (drawDifficulties)
     {
-	let difficulties = game.difficulties;
 	if (game.name === 'IN') {
 	    // IN has an A/B split, so do this custom-style.
 	    difficulties = 'XLHNLHN'.split('');
+	    if (easyMode) {
+		difficulties = 'XLHNELHNE'.split('');
+	    }
 	    if (ctx) {
 		ctx.lineWidth = 1.0;
 		ctx.beginPath();
@@ -563,11 +659,15 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
 		ctx.stroke();
 		drawText("B", baseX - 2, baseY + (boxWidth) + 7);
 
+		let aOffset = 4;
+		if (easyMode) {
+		    aOffset = 5;
+		}
 		ctx.beginPath();
-		ctx.lineTo(baseX - 3.5, baseY + (4 * boxWidth));
-		ctx.lineTo(baseX + 15, baseY + (4 * boxWidth));
+		ctx.lineTo(baseX - 3.5, baseY + (aOffset * boxWidth));
+		ctx.lineTo(baseX + 15, baseY + (aOffset * boxWidth));
 		ctx.stroke();
-		drawText("A", baseX - 2, baseY + (4 * boxWidth) + 7);
+		drawText("A", baseX - 2, baseY + (aOffset * boxWidth) + 7);
 
 	    }
 	}
@@ -577,6 +677,13 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
 	    y += 1;
 	}
 	baseX += 14;
+    }
+
+    if (easyMode) {
+	// We screwed with IN to make it render nice, so fix it up again.
+	if (game.name === 'IN') {
+	    difficulties = ["X", "B-L", "B-H", "B-N", "B-E", "A-L", "A-H", "A-N", "A-E"];
+	}
     }
 
     let dotOffset = 0;
@@ -602,27 +709,33 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
     let y = 0;
     for (let character of expandedChars) {
 	y = 0;
-	for (let difficulty of game.difficulties) {
+	for (let difficulty of difficulties) {
 	    // Some games need to skip boxes...
 	    let skipBox = false;
 	    let skipDraw = false;
 	    skipBox = skipBox || (game.name === 'GFW' && character === 'EX' && difficulty !== 'N');
 	    skipBox = skipBox || (game.name === 'LOLK' && !character.endsWith('l') && difficulty === 'X');
 	    skipBox = skipBox || (game.name === 'HSIFS' && !character.endsWith('sp') && difficulty === 'X');
+	    skipBox = skipBox || (game.name === 'TD' && character.endsWith('2') && difficulty === 'X');
+	    skipBox = skipBox || (game.name === 'UM' && character.endsWith('2') && difficulty === 'X');
 
 	    skipDraw = (game.name === 'GFW' && character === 'EX' && difficulty === 'N');
 	    skipDraw = skipDraw || (game.name === 'GFW' && character === 'C2' && difficulty === 'N');
 
 	    if (!skipBox)
 	    {
+		let yDraw = y;
+		if (game.name === 'GFW' && character === 'EX' && difficulty === 'N' && easyMode) {
+		    yDraw += 1;
+		}
 		let box : Path2D = new Path2D();
-		box.rect(baseX + (x * boxWidth) + 0.5, baseY + (y * boxWidth) + 0.5, boxWidth - 1, boxWidth - 1);
+		box.rect(baseX + (x * boxWidth) + 0.5, baseY + (yDraw * boxWidth) + 0.5, boxWidth - 1, boxWidth - 1);
 		let boxName = game.name + '-' + character + '-' + difficulty;
 		boxes.push([box, boxName]);
 
-		drawBoxContents(baseX + (x * boxWidth), baseY + (y * boxWidth), boxName, game.colour);
+		drawBoxContents(baseX + (x * boxWidth), baseY + (yDraw * boxWidth), boxName, game.colour);
 		if (!skipDraw) {
-		    drawBox(baseX + (x * boxWidth), baseY + (y * boxWidth), boxWidth, boxWidth, 1);
+		    drawBox(baseX + (x * boxWidth), baseY + (yDraw * boxWidth), boxWidth, boxWidth, 1);
 		}
 
 	    }
@@ -635,12 +748,15 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
     }
 
     // Draw outer box, except for annoying games like LOLK, GFW and HSIFS.
-    if (game.name !== 'LOLK' && game.name !== 'GFW' && game.name !== 'HSIFS') {
+    if (game.name != 'TD' && game.name != 'UM' && game.name !== 'LOLK' && game.name !== 'GFW' && game.name !== 'HSIFS') {
 	drawBox(baseX - 0.5, baseY - 0.5, boxWidth * width, boxWidth * height, 2);
     }
 
     if (game.name === 'LOLK') {
 	drawLOLKBox(baseX - 0.5, baseY - 0.5);
+    }
+    if (game.name === 'TD' || game.name === 'UM') {
+	drawTDUMBox(baseX - 0.5, baseY - 0.5);
     }
     if (game.name === 'GFW') {
 	drawGFWBox(baseX - 0.5, baseY - 0.5);
@@ -795,6 +911,9 @@ function setupControls() {
     const fightingCheckbox: HTMLInputElement | null = document.getElementById('fightingCheckbox') as HTMLInputElement;
     fightingCheckbox.addEventListener('change', updateFightingStatus);
 
+    const easyCheckbox: HTMLInputElement | null = document.getElementById('easyCheckbox') as HTMLInputElement;
+    easyCheckbox.addEventListener('change', updateEasyStatus);
+
     const legendCheckbox: HTMLInputElement | null = document.getElementById('legendCheckbox') as HTMLInputElement;
     legendCheckbox.addEventListener('change', updateLegendStatus);
 
@@ -904,6 +1023,30 @@ function updateMisses(e: Event) {
 let transparentPng = true;
 let showFighting = true;
 let showLegend = true;
+let easyMode = false;
+
+function updateCanvasHeight() {
+    let height = 640;
+    if (!showFighting && !easyMode) {
+	height = 460;
+    }
+
+    if (easyMode && !showFighting) {
+	height += 5.5 * boxWidth;
+    }
+
+    if (easyMode && showFighting) {
+	height += 7.5 * boxWidth;
+    }
+
+    canvas.height = height;
+    canvas.style.height = height + "px";
+    if (ctx) {
+	ctx.translate(0.5, 0.5);
+    }
+
+    drawScreen();
+}
 
 function updateBgStatus(e: Event) {
     transparentPng = (e.target! as HTMLInputElement).checked;
@@ -917,17 +1060,12 @@ function updateLegendStatus(e: Event) {
 
 function updateFightingStatus(e: Event) {
     showFighting = (e.target! as HTMLInputElement).checked;
-    if (showFighting) {
-	canvas.height = 640;
-	canvas.style.height = "640px";
-    } else {
-	canvas.height = 460;
-	canvas.style.height = "460px";
-    }
-    if (ctx) {
-	ctx.translate(0.5, 0.5);
-    }
-    drawScreen();
+    updateCanvasHeight();
+}
+
+function updateEasyStatus(e: Event) {
+    easyMode = (e.target! as HTMLInputElement).checked;
+    updateCanvasHeight();
 }
 
 function selectBox(box : [Path2D, string]) {
@@ -1142,7 +1280,7 @@ function drawScreen() {
 	    ctx.fillRect(-2, -2, canvas.width + 2, canvas.height + 2);
 	}
     }
-    const yOffset = boxWidth;
+    let yOffset = boxWidth;
     drawText("1CC CHART", 2, 6);
     if (showLegend) {
 	drawLegend();
@@ -1154,14 +1292,25 @@ function drawScreen() {
     drawGame(ms, lastX + boxWidth, yOffset);
     drawGame(eosd, lastX + boxWidth, yOffset);
 
+    if (easyMode) {
+	yOffset += boxWidth;
+    }
     drawGame(stb, lastX + 2 * boxWidth - 6, yOffset + 2 * boxWidth, true);
     drawGame(ds, lastX + 2 * boxWidth - 4, yOffset + 2 * boxWidth, true);
     drawGame(isc, lastX + 2 * boxWidth - 8, yOffset + 2 * boxWidth, true);
     drawGame(vd, lastX + 2 * boxWidth, yOffset + 2 * boxWidth, true);
 
-    drawGame(pcb, 2, yOffset + 8 * boxWidth, true);
+    let pcvPofvOffset = 0;
+    if (easyMode) {
+	pcvPofvOffset = 1;
+    }
+    drawGame(pcb, 2, yOffset + ((pcvPofvOffset + 8) * boxWidth), true);
     drawGame(imp, lastX + 2 * boxWidth, yOffset + 6 * boxWidth, true);
-    drawGame(pofv, lastX + 2 * boxWidth, yOffset + 9 * boxWidth, true);
+    drawGame(pofv, lastX + 2 * boxWidth, yOffset + ((pcvPofvOffset + 9) * boxWidth), true);
+
+    if (easyMode) {
+	yOffset += 2 * boxWidth;
+    }
 
     drawGame(mof, 2, yOffset + 15 * boxWidth, true);
     drawGame(sa, lastX + boxWidth, yOffset + 15 * boxWidth);
@@ -1170,12 +1319,21 @@ function drawScreen() {
 
     drawGame(td, lastX + 2 * boxWidth, yOffset + 15 * boxWidth, true);
     drawGame(ddc, lastX + boxWidth, yOffset + 15 * boxWidth);
-    drawGame(lolk, lastX + boxWidth, yOffset + 15 * boxWidth);
 
-    drawGame(hsifs, 2, yOffset + 21 * boxWidth, true);
+    if (easyMode) {
+	yOffset += boxWidth;
+    }
 
-    drawGame(wbawc, lastX + 3 * boxWidth, yOffset + 21 * boxWidth, true);
+    drawGame(lolk, 2, yOffset + 21 * boxWidth, true);
+
+    drawGame(hsifs, lastX + 2 * boxWidth, yOffset + 21 * boxWidth, true);
+
+    drawGame(wbawc, lastX + 2 * boxWidth, yOffset + 21 * boxWidth, true);
     drawGame(um, lastX + boxWidth, yOffset + 21 * boxWidth);
+
+    if (easyMode) {
+	yOffset += boxWidth;
+    }
 
     if (showFighting) {
 	drawExtraHeader(lastX, yOffset + 26.7 * boxWidth);
@@ -1184,8 +1342,14 @@ function drawScreen() {
 	drawGame(hsoku, lastX + boxWidth, yOffset + 28 * boxWidth);
 	drawGame(hm, lastX + boxWidth, yOffset + 28 * boxWidth);
 
+	if (easyMode) {
+	    yOffset += boxWidth;
+	}
+
 	drawGame(ulil, 2, yOffset + 33 * boxWidth, true);
 	drawGame(aocf, lastX + boxWidth, yOffset + 33 * boxWidth);
+
+	drawGame(gi, lastX + 2 * boxWidth, yOffset + 33 * boxWidth, true);
     }
 
     drawHighlight();
