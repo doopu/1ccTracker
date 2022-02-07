@@ -720,7 +720,11 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
 	    skipBox = skipBox || (game.name === 'UM' && character.endsWith('2') && difficulty === 'X');
 
 	    skipDraw = (game.name === 'GFW' && character === 'EX' && difficulty === 'N');
-	    skipDraw = skipDraw || (game.name === 'GFW' && character === 'C2' && difficulty === 'N');
+	    if (easyMode) {
+		skipDraw = skipDraw || (game.name === 'GFW' && character === 'C2' && difficulty === 'E');
+	    } else {
+		skipDraw = skipDraw || (game.name === 'GFW' && character === 'C2' && difficulty === 'N');
+	    }
 
 	    if (!skipBox)
 	    {
