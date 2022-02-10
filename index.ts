@@ -636,7 +636,7 @@ function drawGame(game: Game, baseX: number, baseY: number, drawDifficulties: bo
     if (easyMode) {
 	if (game.name === 'IN') {
 	    difficulties = ["X", "B-L", "B-H", "B-N", "B-E", "A-L", "A-H", "A-N", "A-E"];
-	} else if (difficulties[difficulties.length - 1] === 'N') {
+	} else if (difficulties[difficulties.length - 1] === 'N' && game.name != 'GI') {
 	    difficulties.push('E');
 	}
     }
