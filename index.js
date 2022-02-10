@@ -765,6 +765,27 @@ function setupControls() {
     easyCheckbox.addEventListener('change', updateEasyStatus);
     const legendCheckbox = document.getElementById('legendCheckbox');
     legendCheckbox.addEventListener('change', updateLegendStatus);
+    // For the checkboxes, set them to whatever's in the checkboxState map, if available.
+    let checkboxValue = getCheckboxFromState('bg');
+    if (checkboxValue !== null) {
+        transparentPng = checkboxValue;
+        bgCheckbox.checked = checkboxValue;
+    }
+    checkboxValue = getCheckboxFromState('fighting');
+    if (checkboxValue !== null) {
+        showFighting = checkboxValue;
+        fightingCheckbox.checked = checkboxValue;
+    }
+    checkboxValue = getCheckboxFromState('easy');
+    if (checkboxValue !== null) {
+        easyMode = checkboxValue;
+        easyCheckbox.checked = checkboxValue;
+    }
+    checkboxValue = getCheckboxFromState('legend');
+    if (checkboxValue !== null) {
+        showLegend = checkboxValue;
+        legendCheckbox.checked = checkboxValue;
+    }
 }
 function toggleDone() {
     if (selectedBox) {
@@ -865,6 +886,7 @@ function updateCanvasHeight() {
         height = 460;
     }
     if (easyMode && !showFighting) {
+        height = 460;
         height += 5.5 * boxWidth;
     }
     if (easyMode && showFighting) {
@@ -879,18 +901,22 @@ function updateCanvasHeight() {
 }
 function updateBgStatus(e) {
     transparentPng = e.target.checked;
+    setCheckboxInState('bg', transparentPng);
     drawScreen();
 }
 function updateLegendStatus(e) {
     showLegend = e.target.checked;
+    setCheckboxInState('legend', showLegend);
     drawScreen();
 }
 function updateFightingStatus(e) {
     showFighting = e.target.checked;
+    setCheckboxInState('fighting', showFighting);
     updateCanvasHeight();
 }
 function updateEasyStatus(e) {
     easyMode = e.target.checked;
+    setCheckboxInState('easy', easyMode);
     updateCanvasHeight();
 }
 function selectBox(box) {
@@ -1142,6 +1168,7 @@ function drawScreen() {
     }
     drawHighlight();
 }
+let checkboxState = new Map();
 let state = new Map();
 function getBoxFromState(box) {
     if (state.has(box[1])) {
@@ -1153,6 +1180,18 @@ function getBoxFromState(box) {
         return newBox;
     }
 }
+function getCheckboxFromState(checkboxName) {
+    if (checkboxState.has(checkboxName)) {
+        return checkboxState.get(checkboxName);
+    }
+    else {
+        return null;
+    }
+}
+function setCheckboxInState(checkboxName, checkboxValue) {
+    checkboxState.set(checkboxName, checkboxValue);
+    window.localStorage.setItem('checkboxState', JSON.stringify(Array.from(checkboxState.entries())));
+}
 function setBoxInState(box) {
     state.set(box.name, box);
     window.localStorage.setItem('state', JSON.stringify(Array.from(state.entries())));
@@ -1161,6 +1200,9 @@ function loadState() {
     if (window.localStorage.getItem('state')) {
         state = new Map(JSON.parse(window.localStorage.getItem('state')));
     }
+    if (window.localStorage.getItem('checkboxState')) {
+        checkboxState = new Map(JSON.parse(window.localStorage.getItem('checkboxState')));
+    }
 }
 const font = new FontFace('touhouFont', 'url(touhouFont2.ttf)');
 const fontMini = new FontFace('touhouFontMini', 'url(touhouFontLittle.ttf)');
@@ -1168,10 +1210,7 @@ fontMini.load().then(function () {
     font.load().then(function () {
         loadState();
         setupControls();
-        if (ctx) {
-            // Voodoo...
-            ctx.translate(0.5, 0.5);
-        }
+        updateCanvasHeight();
         drawScreen();
     });
 });

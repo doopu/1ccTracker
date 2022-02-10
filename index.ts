@@ -921,6 +921,30 @@ function setupControls() {
     const legendCheckbox: HTMLInputElement | null = document.getElementById('legendCheckbox') as HTMLInputElement;
     legendCheckbox.addEventListener('change', updateLegendStatus);
 
+    // For the checkboxes, set them to whatever's in the checkboxState map, if available.
+    let checkboxValue = getCheckboxFromState('bg');
+    if (checkboxValue !== null) {
+	transparentPng = checkboxValue;
+	bgCheckbox.checked = checkboxValue;
+    }
+
+    checkboxValue = getCheckboxFromState('fighting');
+    if (checkboxValue !== null) {
+	showFighting = checkboxValue;
+	fightingCheckbox.checked = checkboxValue;
+    }
+
+    checkboxValue = getCheckboxFromState('easy');
+    if (checkboxValue !== null) {
+	easyMode = checkboxValue;
+	easyCheckbox.checked = checkboxValue;
+    }
+
+    checkboxValue = getCheckboxFromState('legend');
+    if (checkboxValue !== null) {
+	showLegend = checkboxValue;
+	legendCheckbox.checked = checkboxValue;
+    }
 }
 
 function toggleDone()
@@ -1036,6 +1060,7 @@ function updateCanvasHeight() {
     }
 
     if (easyMode && !showFighting) {
+	height = 460;
 	height += 5.5 * boxWidth;
     }
 
@@ -1054,21 +1079,25 @@ function updateCanvasHeight() {
 
 function updateBgStatus(e: Event) {
     transparentPng = (e.target! as HTMLInputElement).checked;
+    setCheckboxInState('bg', transparentPng);
     drawScreen();
 }
 
 function updateLegendStatus(e: Event) {
     showLegend = (e.target! as HTMLInputElement).checked;
+    setCheckboxInState('legend', showLegend);
     drawScreen();
 }
 
 function updateFightingStatus(e: Event) {
     showFighting = (e.target! as HTMLInputElement).checked;
+    setCheckboxInState('fighting', showFighting);
     updateCanvasHeight();
 }
 
 function updateEasyStatus(e: Event) {
     easyMode = (e.target! as HTMLInputElement).checked;
+    setCheckboxInState('easy', easyMode);
     updateCanvasHeight();
 }
 
@@ -1359,6 +1388,8 @@ function drawScreen() {
     drawHighlight();
 }
 
+let checkboxState : Map<string, boolean> = new Map();
+
 let state : Map<string, BoxObject> = new Map();
 
 function getBoxFromState(box: [Path2D, string]) : BoxObject {
@@ -1371,6 +1402,19 @@ function getBoxFromState(box: [Path2D, string]) : BoxObject {
     }
 }
 
+function getCheckboxFromState(checkboxName: string) : boolean | null {
+    if (checkboxState.has(checkboxName)) {
+	return checkboxState.get(checkboxName)!;
+    } else {
+	return null;
+    }
+}
+
+function setCheckboxInState(checkboxName: string, checkboxValue: boolean) {
+    checkboxState.set(checkboxName, checkboxValue);
+    window.localStorage.setItem('checkboxState', JSON.stringify(Array.from(checkboxState.entries())));
+}
+
 function setBoxInState(box: BoxObject) {
     state.set(box.name, box);
     window.localStorage.setItem('state', JSON.stringify(Array.from(state.entries())));
@@ -1381,6 +1425,11 @@ function loadState() {
     {
 	state = new Map(JSON.parse(window.localStorage.getItem('state')!)!)!;
     }
+    if (window.localStorage.getItem('checkboxState'))
+    {
+	checkboxState = new Map(JSON.parse(window.localStorage.getItem('checkboxState')!)!)!;
+    }
+
 }
 
 const font = new FontFace('touhouFont', 'url(touhouFont2.ttf)');
@@ -1390,10 +1439,7 @@ fontMini.load().then(function() {
     font.load().then(function() {
 	loadState();
 	setupControls();
-	if (ctx) {
-	    // Voodoo...
-	    ctx.translate(0.5, 0.5);
-	}
+	updateCanvasHeight();
 	drawScreen();
     });
 });
