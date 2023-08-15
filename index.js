@@ -328,6 +328,7 @@ const stb = new Game("STB", "rgba(99, 44, 0, 1.0)", ["85", "66"], [new Character
 const ds = new Game("DS", "rgba(10, 34, 119, 1.0)", ["108", "58"], [new Character("AY"), new Character("HA")]);
 const isc = new Game("ISC", "rgba(99, 44, 0, 1.0)", ["NI", "C"], [new Character("SJ")]);
 const vd = new Game("VD", "rgba(163, 73, 164, 1.0)", ["103", "C"], [new Character("SM")]);
+const bm = new Game("100BM", "rgba(232, 125, 0, 1.0)", ["85", "C"], [new Character("M")]);
 const pcb = new Game("PCB", "rgba(255, 127, 191, 1.0)", "PXLHN".split(''), [new Character("R", ["a", "b"]),
     new Character("M", ["a", "b"]),
     new Character("S", ["a", "b"])]);
@@ -393,6 +394,25 @@ const um = new Game("UM", "rgba(0, 201, 109, 1.0)", "XLHN".split(''), [new Chara
     new Character("M", ["e1", "e2"]),
     new Character("S", ["e1", "e2"]),
     new Character("SN", ["e1", "e2"])]);
+const udoalg = new Game("UDOALG", "rgba(255, 255, 0, 1.0)", "LHN".split(''), [new Character("R"),
+	new Character("M"),
+	new Character("SN"),
+	new Character("RA"),
+	new Character("A"),
+	new Character("N"),
+	new Character("SR"),
+	new Character("RI"),
+	new Character("TS"),
+	new Character("MM"),
+	new Character("YC"),
+	new Character("SK"),
+	new Character("YT"),
+	new Character("SU"),
+	new Character("BS"),
+	new Character("EN"),
+	new Character("CY"),
+	new Character("H"),
+	new Character("Z")]);
 const iamp = new Game("IAMP", "rgba(78, 22, 86, 1.0)", "LHN".split(''), [new Character("R"),
     new Character("M"),
     new Character("S"),
@@ -462,7 +482,8 @@ const gi = new Game("GI", "rgba(131, 5, 5, 1.0)", "HN".split(''), [new Character
     new Character("KA"),
     new Character("MU"),
     new Character("J"),
-    new Character("FL", ["a", "b", "c"])]);
+    new Character("FL", ["a", "b", "c"]),
+	new Character("YT")]);
 let lastX = 0;
 let lastY = 0;
 function drawText(text, x, y, align = 'left', font = "16px touhouFont", colour = "black") {
@@ -516,7 +537,7 @@ function drawGame(game, baseX, baseY, drawDifficulties = false) {
         if (game.name === 'IN') {
             difficulties = ["X", "B-L", "B-H", "B-N", "B-E", "A-L", "A-H", "A-N", "A-E"];
         }
-        else if (difficulties[difficulties.length - 1] === 'N' && game.name != 'GI') {
+        else if (difficulties[difficulties.length - 1] === 'N') {
             difficulties.push('E');
         }
     }
@@ -881,15 +902,16 @@ let showFighting = true;
 let showLegend = true;
 let easyMode = false;
 function updateCanvasHeight() {
-    let height = 640;
+    let height = 745;
     if (!showFighting && !easyMode) {
-        height = 460;
+        height = 540;
     }
     if (easyMode && !showFighting) {
-        height = 460;
+        height = 550;
         height += 5.5 * boxWidth;
     }
     if (easyMode && showFighting) {
+		height = 750;
         height += 7.5 * boxWidth;
     }
     canvas.height = height;
@@ -1123,10 +1145,11 @@ function drawScreen() {
     if (easyMode) {
         yOffset += boxWidth;
     }
-    drawGame(stb, lastX + 2 * boxWidth - 6, yOffset + 2 * boxWidth, true);
-    drawGame(ds, lastX + 2 * boxWidth - 4, yOffset + 2 * boxWidth, true);
-    drawGame(isc, lastX + 2 * boxWidth - 8, yOffset + 2 * boxWidth, true);
-    drawGame(vd, lastX + 2 * boxWidth, yOffset + 2 * boxWidth, true);
+    drawGame(stb, lastX + 2 * boxWidth - 6, yOffset + 0 * boxWidth, true);
+    drawGame(ds, lastX + 2 * boxWidth - 4, yOffset + 0 * boxWidth, true);
+    drawGame(isc, lastX + 2 * boxWidth - 8, yOffset + 0 * boxWidth, true);
+    drawGame(vd, lastX + 2 * boxWidth, yOffset + 0 * boxWidth, true);
+	drawGame(bm, 27.585 * boxWidth, yOffset + 4 * boxWidth, true);
     let pcvPofvOffset = 0;
     if (easyMode) {
         pcvPofvOffset = 1;
@@ -1153,18 +1176,22 @@ function drawScreen() {
     if (easyMode) {
         yOffset += boxWidth;
     }
+	drawGame(udoalg, 2, yOffset + 27 * boxWidth, true);
+	if (easyMode) {
+		yOffset += boxWidth;
+	}
     if (showFighting) {
-        drawExtraHeader(lastX, yOffset + 26.7 * boxWidth);
-        drawGame(iamp, 2, yOffset + 28 * boxWidth, true);
-        drawGame(swr, lastX + boxWidth, yOffset + 28 * boxWidth);
-        drawGame(hsoku, lastX + boxWidth, yOffset + 28 * boxWidth);
-        drawGame(hm, lastX + boxWidth, yOffset + 28 * boxWidth);
+        drawExtraHeader(lastX, yOffset + 32.7 * boxWidth);
+        drawGame(iamp, 2, yOffset + 34 * boxWidth, true);
+        drawGame(swr, lastX + boxWidth, yOffset + 34 * boxWidth);
+        drawGame(hsoku, lastX + boxWidth, yOffset + 34 * boxWidth);
+        drawGame(hm, lastX + boxWidth, yOffset + 34 * boxWidth);
         if (easyMode) {
             yOffset += boxWidth;
         }
-        drawGame(ulil, 2, yOffset + 33 * boxWidth, true);
-        drawGame(aocf, lastX + boxWidth, yOffset + 33 * boxWidth);
-        drawGame(gi, lastX + 2 * boxWidth, yOffset + 33 * boxWidth, true);
+        drawGame(ulil, 2, yOffset + 39 * boxWidth, true);
+        drawGame(aocf, lastX + boxWidth, yOffset + 39 * boxWidth);
+        drawGame(gi, lastX + 2 * boxWidth, yOffset + 39 * boxWidth, true);
     }
     drawHighlight();
 }
