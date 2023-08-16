@@ -394,25 +394,25 @@ const um = new Game("UM", "rgba(0, 201, 109, 1.0)", "XLHN".split(''), [new Chara
     new Character("M", ["e1", "e2"]),
     new Character("S", ["e1", "e2"]),
     new Character("SN", ["e1", "e2"])]);
-const udoalg = new Game("UDOALG", "rgba(255, 255, 0, 1.0)", "LHN".split(''), [new Character("R"),
-	new Character("M"),
-	new Character("SN"),
-	new Character("RA"),
-	new Character("A"),
-	new Character("N"),
-	new Character("SR"),
-	new Character("RI"),
-	new Character("TS"),
-	new Character("MM"),
-	new Character("YC"),
-	new Character("SK"),
-	new Character("YT"),
-	new Character("SU"),
-	new Character("BS"),
-	new Character("EN"),
-	new Character("CY"),
-	new Character("H"),
-	new Character("Z")]);
+const udoalg = new Game("UDOALG", "rgba(74, 124, 71, 1.0)", "LHN".split(''), [new Character("R"),
+    new Character("M"),
+    new Character("SN"),
+    new Character("RA"),
+    new Character("A"),
+    new Character("N"),
+    new Character("SR"),
+    new Character("RI"),
+    new Character("TS"),
+    new Character("MM"),
+    new Character("YC"),
+    new Character("SK"),
+    new Character("YT"),
+    new Character("SU"),
+    new Character("BS"),
+    new Character("EN"),
+    new Character("CY"),
+    new Character("H"),
+    new Character("Z")]);
 const iamp = new Game("IAMP", "rgba(78, 22, 86, 1.0)", "LHN".split(''), [new Character("R"),
     new Character("M"),
     new Character("S"),
@@ -483,7 +483,7 @@ const gi = new Game("GI", "rgba(131, 5, 5, 1.0)", "HN".split(''), [new Character
     new Character("MU"),
     new Character("J"),
     new Character("FL", ["a", "b", "c"]),
-	new Character("YT")]);
+    new Character("YT")]);
 let lastX = 0;
 let lastY = 0;
 function drawText(text, x, y, align = 'left', font = "16px touhouFont", colour = "black") {
@@ -1142,14 +1142,14 @@ function drawScreen() {
     drawGame(ls, lastX + boxWidth, yOffset);
     drawGame(ms, lastX + boxWidth, yOffset);
     drawGame(eosd, lastX + boxWidth, yOffset);
-    if (easyMode) {
-        yOffset += boxWidth;
-    }
     drawGame(stb, lastX + 2 * boxWidth - 6, yOffset + 0 * boxWidth, true);
     drawGame(ds, lastX + 2 * boxWidth - 4, yOffset + 0 * boxWidth, true);
     drawGame(isc, lastX + 2 * boxWidth - 8, yOffset + 0 * boxWidth, true);
     drawGame(vd, lastX + 2 * boxWidth, yOffset + 0 * boxWidth, true);
-	drawGame(bm, 27.585 * boxWidth, yOffset + 4 * boxWidth, true);
+    drawGame(bm, 27.585 * boxWidth, yOffset + 4 * boxWidth, true);
+    if (easyMode) {
+        yOffset += boxWidth;
+    }
     let pcvPofvOffset = 0;
     if (easyMode) {
         pcvPofvOffset = 1;
@@ -1176,22 +1176,22 @@ function drawScreen() {
     if (easyMode) {
         yOffset += boxWidth;
     }
-	drawGame(udoalg, 2, yOffset + 27 * boxWidth, true);
-	if (easyMode) {
-		yOffset += boxWidth;
+    drawGame(udoalg, 2, yOffset + 27 * boxWidth, true);
+    if (easyMode) {
+        yOffset += boxWidth;
 	}
     if (showFighting) {
-        drawExtraHeader(lastX, yOffset + 32.7 * boxWidth);
-        drawGame(iamp, 2, yOffset + 34 * boxWidth, true);
-        drawGame(swr, lastX + boxWidth, yOffset + 34 * boxWidth);
-        drawGame(hsoku, lastX + boxWidth, yOffset + 34 * boxWidth);
-        drawGame(hm, lastX + boxWidth, yOffset + 34 * boxWidth);
+        drawExtraHeader(lastX, yOffset + 31.35 * boxWidth);
+        drawGame(iamp, 2, yOffset + 32.7 * boxWidth, true);
+        drawGame(swr, lastX + boxWidth, yOffset + 32.7 * boxWidth);
+        drawGame(hsoku, lastX + boxWidth, yOffset + 32.7 * boxWidth);
+        drawGame(hm, lastX + boxWidth, yOffset + 32.7 * boxWidth);
         if (easyMode) {
             yOffset += boxWidth;
         }
-        drawGame(ulil, 2, yOffset + 39 * boxWidth, true);
-        drawGame(aocf, lastX + boxWidth, yOffset + 39 * boxWidth);
-        drawGame(gi, lastX + 2 * boxWidth, yOffset + 39 * boxWidth, true);
+        drawGame(ulil, 2, yOffset + 37.7 * boxWidth, true);
+        drawGame(aocf, lastX + boxWidth, yOffset + 37.7 * boxWidth);
+        drawGame(gi, lastX + 2 * boxWidth, yOffset + 37.7 * boxWidth, true);
     }
     drawHighlight();
 }
